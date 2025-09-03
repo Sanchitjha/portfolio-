@@ -7,16 +7,15 @@ import dotenv from "dotenv"
 import path from "path"
 import { fileURLToPath } from "url"
 
-import connectDB from "./config/database.js"
-import { errorHandler, notFound } from "./middleware/errorMiddleware.js"
-import { rateLimiter } from "./middleware/rateLimiter.js"
+import connectDB from "./src/config/database.js"
+import { errorHandler, notFound } from "./src/middleware/errorMiddleware.js"
+import { rateLimiter } from "./src/middleware/rateLimiter.js"
 
 // Routes
-import projectRoutes from "./routes/projects.js"
-import skillRoutes from "./routes/skills.js"
-import contactRoutes from "./routes/contact.js"
-import experienceRoutes from "./routes/experience.js"
-import githubRoutes from "./routes/github.js"
+import authRoutes from "./src/routes/auth.js"
+import projectRoutes from "./src/routes/projects.js"
+import contactRoutes from "./src/routes/contact.js"
+import uploadRoutes from "./src/routes/upload.js"
 
 dotenv.config()
 
@@ -62,11 +61,10 @@ app.get("/health", (req, res) => {
 })
 
 // API Routes
+app.use("/api/auth", authRoutes)
 app.use("/api/projects", projectRoutes)
-app.use("/api/skills", skillRoutes)
 app.use("/api/contact", contactRoutes)
-app.use("/api/experience", experienceRoutes)
-app.use("/api/github", githubRoutes)
+app.use("/api/upload", uploadRoutes)
 
 // Error handling
 app.use(notFound)
