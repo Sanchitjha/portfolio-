@@ -14,14 +14,18 @@ const Hero = dynamic(() => import("@/components/sections/Hero"), {
   loading: () => <div className="min-h-screen bg-gradient-to-br from-slate-900 to-blue-900" />,
 })
 
-const About = dynamic(() => import("@/components/sections/About"), { ssr: false })
-const Skills = dynamic(() => import("@/components/sections/Skills"), { ssr: false })
+const About      = dynamic(() => import("@/components/sections/About"),      { ssr: false })
+const Skills     = dynamic(() => import("@/components/sections/Skills"),     { ssr: false })
 const Experience = dynamic(() => import("@/components/sections/Experience"), { ssr: false })
-const Projects = dynamic(() => import("@/components/sections/Projects"), { ssr: false })
-const Contact = dynamic(() => import("@/components/sections/Contact"), { ssr: false })
+const Projects   = dynamic(() => import("@/components/sections/Projects"),   { ssr: false })
+const Resume     = dynamic(() => import("@/components/sections/Resume"),     { ssr: false })
+const Schedule   = dynamic(() => import("@/components/sections/Schedule"),   { ssr: false })
+const Contact    = dynamic(() => import("@/components/sections/Contact"),    { ssr: false })
 
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+
+const Fallback = ({ height = "min-h-96" }) => <div className={height} />
 
 export default function HomePage() {
   return (
@@ -33,22 +37,28 @@ export default function HomePage() {
       <Navbar />
 
       <div className="relative z-10">
-        <Suspense fallback={<div className="min-h-screen" />}>
+        <Suspense fallback={<Fallback height="min-h-screen" />}>
           <Hero />
         </Suspense>
-        <Suspense fallback={<div className="min-h-96" />}>
+        <Suspense fallback={<Fallback />}>
           <About />
         </Suspense>
-        <Suspense fallback={<div className="min-h-96" />}>
+        <Suspense fallback={<Fallback />}>
           <Skills />
         </Suspense>
-        <Suspense fallback={<div className="min-h-96" />}>
+        <Suspense fallback={<Fallback />}>
           <Experience />
         </Suspense>
-        <Suspense fallback={<div className="min-h-96" />}>
+        <Suspense fallback={<Fallback />}>
           <Projects />
         </Suspense>
-        <Suspense fallback={<div className="min-h-96" />}>
+        <Suspense fallback={<Fallback />}>
+          <Resume />
+        </Suspense>
+        <Suspense fallback={<Fallback />}>
+          <Schedule />
+        </Suspense>
+        <Suspense fallback={<Fallback />}>
           <Contact />
         </Suspense>
       </div>
