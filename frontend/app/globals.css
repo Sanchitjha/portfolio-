@@ -466,6 +466,11 @@ body {
   color: rgba(255, 255, 255, 0.5);
 }
 
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background: radial-gradient(circle at center, var(--tw-gradient-stops));
+}
+
 /* Loading states */
 .loading-skeleton {
   background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
