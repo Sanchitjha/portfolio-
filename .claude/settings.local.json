@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(js|json|ts|tsx|jsx\\)$|^d\")",
+      "Bash(npm run *)",
+      "Bash(timeout 18)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ping -n 8 127.0.0.1)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp"
+    ]
+  }
+}
