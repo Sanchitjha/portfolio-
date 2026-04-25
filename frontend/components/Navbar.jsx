@@ -2,16 +2,18 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Code, Home, User, Briefcase, FolderOpen, Mail, Zap } from "lucide-react"
+import { Menu, X, Code, Home, User, Briefcase, FolderOpen, Mail, Zap, FileText, Calendar } from "lucide-react"
 import Link from "next/link"
 
 const navItems = [
-  { name: "Home", href: "#home", icon: Home },
-  { name: "About", href: "#about", icon: User },
-  { name: "Skills", href: "#skills", icon: Zap },
+  { name: "Home",       href: "#home",       icon: Home },
+  { name: "About",      href: "#about",      icon: User },
+  { name: "Skills",     href: "#skills",     icon: Zap },
   { name: "Experience", href: "#experience", icon: Briefcase },
-  { name: "Projects", href: "#projects", icon: FolderOpen },
-  { name: "Contact", href: "#contact", icon: Mail },
+  { name: "Projects",   href: "#projects",   icon: FolderOpen },
+  { name: "Resume",     href: "#resume",     icon: FileText },
+  { name: "Schedule",   href: "#schedule",   icon: Calendar },
+  { name: "Contact",    href: "#contact",    icon: Mail },
 ]
 
 export default function Navbar() {
@@ -24,7 +26,7 @@ export default function Navbar() {
       setScrolled(window.scrollY > 50)
 
       // Update active section based on scroll position
-      const sections = navItems.map((item) => item.href.substring(1))
+      const sections = ["home","about","skills","experience","projects","resume","schedule","contact"]
       const currentSection = sections.find((section) => {
         const element = document.getElementById(section)
         if (element) {
@@ -71,30 +73,43 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center space-x-1">
               {navItems.map((item) => {
                 const Icon = item.icon
+                const isActive = activeSection === item.href.substring(1)
+                if (item.name === "Schedule") return null          // shown as CTA button
                 return (
                   <button
                     key={item.name}
                     onClick={() => handleNavClick(item.href)}
-                    className={`flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-300 ${
-                      activeSection === item.href.substring(1)
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all duration-300 ${
+                      isActive
                         ? "text-blue-400 bg-blue-500/10"
-                        : "text-gray-300 hover:text-white hover:bg-gray-800/50"
+                        : "text-gray-400 hover:text-white hover:bg-gray-800/50"
                     }`}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="h-3.5 w-3.5" />
                     <span>{item.name}</span>
                   </button>
                 )
               })}
+              <button
+                onClick={() => handleNavClick("#schedule")}
+                className={`ml-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                  activeSection === "schedule"
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
+                    : "bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500 hover:text-white"
+                }`}
+              >
+                <Calendar className="h-3.5 w-3.5" />
+                Schedule a Call
+              </button>
             </div>
 
             {/* Mobile menu button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
+              className="lg:hidden p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -110,7 +125,7 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "tween", duration: 0.3 }}
-            className="fixed inset-y-0 right-0 z-50 w-64 bg-gray-900/95 backdrop-blur-md border-l border-gray-800 md:hidden"
+            className="fixed inset-y-0 right-0 z-50 w-72 bg-gray-900/95 backdrop-blur-md border-l border-gray-800 lg:hidden"
           >
             <div className="flex flex-col h-full pt-20 px-6">
               {navItems.map((item, index) => {
@@ -146,7 +161,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           />
         )}
       </AnimatePresence>
