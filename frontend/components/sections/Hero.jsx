@@ -2,16 +2,15 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { TypeAnimation } from "react-type-animation"
-import { ArrowDown, Github, Linkedin, Mail, Download, Calendar } from "lucide-react"
-import Link from "next/link"
+import { ArrowUpRight, Calendar, Mail, MapPin } from "lucide-react"
 import dynamic from "next/dynamic"
+import Link from "next/link"
 
 const AvatarScene = dynamic(() => import("@/components/3d/AvatarScene"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full flex items-center justify-center">
-      <div className="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+      <div className="spinner" />
     </div>
   ),
 })
@@ -30,189 +29,125 @@ export default function Hero() {
     return () => window.removeEventListener("mousemove", handleMouseMove)
   }, [])
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.2 } },
-  }
-  const itemVariants = {
-    hidden: { y: 30, opacity: 0 },
-    visible: { y: 0, opacity: 1, transition: { duration: 0.7, ease: "easeOut" } },
-  }
-
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-3xl"
-          animate={{ x: mousePosition.x * 20, y: mousePosition.y * 20 }}
-          transition={{ type: "spring", stiffness: 30, damping: 20 }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-3xl"
-          animate={{ x: mousePosition.x * -15, y: mousePosition.y * -15 }}
-          transition={{ type: "spring", stiffness: 30, damping: 20 }}
-        />
-      </div>
+    <section id="home" className="relative min-h-screen flex items-center pt-24 lg:pt-0">
+      {/* Subtle grid backdrop */}
+      <div className="absolute inset-0 bg-grid pointer-events-none" />
 
-      <div className="container mx-auto px-6 py-20 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
-          {/* LEFT: TEXT */}
-          <motion.div variants={containerVariants} initial="hidden" animate="visible" className="order-2 lg:order-1">
-            <motion.div variants={itemVariants} className="mb-5">
-              <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                Available for Opportunities
-              </span>
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
+          {/* LEFT — text */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="lg:col-span-7 order-2 lg:order-1"
+          >
+            {/* Status pill */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="inline-flex items-center gap-2 mb-8 text-sm text-tertiary mono"
+            >
+              <span className="dot-pulse" />
+              <span>Available for new opportunities</span>
             </motion.div>
 
-            <motion.h1 variants={itemVariants} className="text-5xl lg:text-7xl font-black mb-4 leading-tight">
-              <span className="text-white">Hi, I'm</span>
+            {/* Heading */}
+            <h1 className="heading-display text-5xl sm:text-6xl lg:text-7xl mb-6">
+              Hi, I'm <span className="gradient-text">Sanchit</span> —
               <br />
-              <span className="gradient-text">Sanchit Jha</span>
-            </motion.h1>
+              <span className="text-secondary font-medium">a backend &</span>
+              <br />
+              <span className="text-secondary font-medium">full-stack engineer.</span>
+            </h1>
 
-            <motion.div variants={itemVariants} className="mb-6">
-              <div className="text-2xl lg:text-3xl text-gray-300 font-light h-12 flex items-center">
-                <TypeAnimation
-                  sequence={[
-                    "Backend Developer",
-                    2000,
-                    "Full Stack Engineer",
-                    2000,
-                    "API Architect",
-                    2000,
-                    "Node.js Expert",
-                    2000,
-                    "MongoDB Specialist",
-                    2000,
-                  ]}
-                  wrapper="span"
-                  speed={50}
-                  repeat={Infinity}
-                  className="text-blue-400 font-semibold"
-                />
-              </div>
-            </motion.div>
+            {/* Subtitle */}
+            <p className="text-lg text-secondary max-w-xl mb-10 leading-relaxed">
+              I build scalable backend systems, robust REST APIs, and modern full-stack
+              applications. Currently exploring distributed systems and developer tooling
+              with <span className="text-primary">Node.js</span>,{" "}
+              <span className="text-primary">Next.js</span>, and{" "}
+              <span className="text-primary">MongoDB</span>.
+            </p>
 
-            <motion.p variants={itemVariants} className="text-gray-400 text-lg mb-10 max-w-lg leading-relaxed">
-              Passionate about building <span className="text-white font-medium">scalable backend systems</span>, robust
-              APIs, and modern full-stack applications with Node.js, MongoDB, and the JavaScript ecosystem.
-            </motion.p>
-
-            <motion.div variants={itemVariants} className="flex flex-wrap gap-2 mb-10">
-              {["Node.js", "Express.js", "MongoDB", "PostgreSQL", "React", "Next.js", "Docker"].map((tech) => (
-                <span
-                  key={tech}
-                  className="px-3 py-1 text-xs font-medium bg-gray-800/60 text-gray-300 rounded-full border border-gray-700/50"
-                >
-                  {tech}
-                </span>
-              ))}
-            </motion.div>
-
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 mb-10">
+            {/* CTAs */}
+            <div className="flex flex-wrap gap-3 mb-12">
               <button
                 onClick={() => document.querySelector("#schedule")?.scrollIntoView({ behavior: "smooth" })}
-                className="btn-primary inline-flex items-center justify-center gap-2 px-7 py-3.5 text-base font-semibold rounded-xl glow-hover"
+                className="btn-base btn-primary"
               >
-                <Calendar className="w-5 h-5" />
-                Schedule a Call
+                <Calendar className="w-4 h-4" />
+                Book a meeting
               </button>
-              <a
-                href="/sanchit-jha-resume.pdf"
-                download
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 text-base font-semibold rounded-xl border border-blue-500/40 text-blue-400 hover:bg-blue-500/10 hover:border-blue-400 transition-all duration-300"
-              >
-                <Download className="w-5 h-5" />
-                Download Resume
+              <a href="mailto:sanchitjha8888@gmail.com" className="btn-base btn-secondary">
+                <Mail className="w-4 h-4" />
+                sanchitjha8888@gmail.com
               </a>
-            </motion.div>
+            </div>
 
-            <motion.div variants={itemVariants} className="flex items-center gap-6">
-              <Link
-                href="https://github.com/Sanchitjha"
-                target="_blank"
-                className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors group"
-              >
-                <div className="p-2.5 rounded-lg bg-gray-800/60 group-hover:bg-gray-700/60 border border-gray-700/50">
-                  <Github className="w-5 h-5" />
-                </div>
-                <span className="text-sm hidden sm:inline">GitHub</span>
-              </Link>
-              <Link
-                href="https://www.linkedin.com/in/sanchit-jha-844b17255"
-                target="_blank"
-                className="flex items-center gap-2 text-gray-400 hover:text-blue-400 transition-colors group"
-              >
-                <div className="p-2.5 rounded-lg bg-gray-800/60 group-hover:bg-blue-500/20 border border-gray-700/50">
-                  <Linkedin className="w-5 h-5" />
-                </div>
-                <span className="text-sm hidden sm:inline">LinkedIn</span>
-              </Link>
-              <Link
-                href="mailto:sanchitjha8888@gmail.com"
-                className="flex items-center gap-2 text-gray-400 hover:text-cyan-400 transition-colors group"
-              >
-                <div className="p-2.5 rounded-lg bg-gray-800/60 group-hover:bg-cyan-500/20 border border-gray-700/50">
-                  <Mail className="w-5 h-5" />
-                </div>
-                <span className="text-sm hidden sm:inline">Email</span>
-              </Link>
-            </motion.div>
+            {/* Location row */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-tertiary">
+              <span className="flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5" />
+                India · Remote
+              </span>
+              <span className="flex items-center gap-1.5 mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
+                IST · UTC+5:30
+              </span>
+            </div>
+
+            {/* Quick links */}
+            <div className="flex flex-wrap gap-x-5 gap-y-2 mt-10 text-sm">
+              {[
+                { label: "GitHub", href: "https://github.com/Sanchitjha" },
+                { label: "LinkedIn", href: "https://www.linkedin.com/in/sanchit-jha-844b17255" },
+                { label: "Resume", href: "/sanchit-jha-resume.pdf" },
+              ].map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  className="group inline-flex items-center gap-1 text-secondary hover:text-primary transition-colors"
+                >
+                  {link.label}
+                  <ArrowUpRight className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                </Link>
+              ))}
+            </div>
           </motion.div>
 
-          {/* RIGHT: 3D AVATAR */}
+          {/* RIGHT — 3D avatar (subtle, smaller) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1, ease: "easeOut", delay: 0.5 }}
-            className="order-1 lg:order-2 flex items-center justify-center"
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="lg:col-span-5 order-1 lg:order-2"
           >
-            <div className="relative w-full h-[400px] lg:h-[600px]">
-              <div className="absolute inset-0 bg-gradient-radial from-blue-500/10 via-transparent to-transparent rounded-full" />
+            <div className="relative w-full aspect-square max-w-[440px] mx-auto">
               <AvatarScene mousePosition={mousePosition} />
 
-              {/* Floating info cards */}
+              {/* Tiny info chips */}
               <motion.div
-                className="hidden lg:block absolute top-8 -left-4 glass rounded-xl px-4 py-3 border border-blue-500/20"
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <div className="text-xs text-gray-400">GitHub Projects</div>
-                <div className="text-xl font-bold text-white">15+</div>
-              </motion.div>
-
-              <motion.div
-                className="hidden lg:block absolute bottom-16 -right-4 glass rounded-xl px-4 py-3 border border-purple-500/20"
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              >
-                <div className="text-xs text-gray-400">Experience</div>
-                <div className="text-xl font-bold text-white">2+ yrs</div>
-              </motion.div>
-
-              <motion.div
-                className="hidden lg:block absolute top-1/2 -right-8 glass rounded-xl px-4 py-3 border border-cyan-500/20"
                 animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="hidden md:block absolute top-6 left-0 surface px-3 py-1.5 mono text-xs text-secondary"
               >
-                <div className="text-xs text-gray-400">Stack</div>
-                <div className="text-sm font-bold text-cyan-400">Full Stack</div>
+                ./sanchit_jha
+              </motion.div>
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="hidden md:flex items-center gap-2 absolute bottom-6 right-0 surface px-3 py-1.5 text-xs"
+              >
+                <span className="dot-pulse" />
+                <span className="text-secondary mono">online</span>
               </motion.div>
             </div>
           </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-500"
-        >
-          <motion.div animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }}>
-            <ArrowDown className="w-5 h-5" />
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   )
