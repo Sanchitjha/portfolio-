@@ -2,167 +2,163 @@
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Menu, X, Code, Home, User, Briefcase, FolderOpen, Mail, Zap, FileText, Calendar } from "lucide-react"
+import { Menu, X, Search, Calendar } from "lucide-react"
 import Link from "next/link"
 
 const navItems = [
-  { name: "Home",       href: "#home",       icon: Home },
-  { name: "About",      href: "#about",      icon: User },
-  { name: "Skills",     href: "#skills",     icon: Zap },
-  { name: "Experience", href: "#experience", icon: Briefcase },
-  { name: "Projects",   href: "#projects",   icon: FolderOpen },
-  { name: "Resume",     href: "#resume",     icon: FileText },
-  { name: "Schedule",   href: "#schedule",   icon: Calendar },
-  { name: "Contact",    href: "#contact",    icon: Mail },
+  { name: "Home",       href: "#home" },
+  { name: "About",      href: "#about" },
+  { name: "Work",       href: "#projects" },
+  { name: "Resume",     href: "#resume" },
+  { name: "Contact",    href: "#contact" },
 ]
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
+  const [isMac, setIsMac] = useState(false)
 
   useEffect(() => {
+    setIsMac(typeof navigator !== "undefined" && /Mac/.test(navigator.platform))
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-
-      // Update active section based on scroll position
+      setScrolled(window.scrollY > 16)
       const sections = ["home","about","skills","experience","projects","resume","schedule","contact"]
-      const currentSection = sections.find((section) => {
-        const element = document.getElementById(section)
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          return rect.top <= 100 && rect.bottom >= 100
-        }
-        return false
+      const current = sections.find((id) => {
+        const el = document.getElementById(id)
+        if (!el) return false
+        const r = el.getBoundingClientRect()
+        return r.top <= 100 && r.bottom >= 100
       })
-
-      if (currentSection) {
-        setActiveSection(currentSection)
-      }
+      if (current) setActiveSection(current)
     }
-
     window.addEventListener("scroll", handleScroll)
+    handleScroll()
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   const handleNavClick = (href) => {
     setIsOpen(false)
-    const element = document.querySelector(href)
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
-    }
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const openCommandPalette = () => {
+    const event = new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+    window.dispatchEvent(event)
   }
 
   return (
     <>
       <motion.nav
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
+        initial={{ y: -40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? "bg-gray-900/95 backdrop-blur-md border-b border-gray-800" : "bg-transparent"
+          scrolled
+            ? "bg-[#0a0a0a]/80 backdrop-blur-md border-b border-[#1a1a1a]"
+            : "bg-transparent"
         }`}
       >
         <div className="container mx-auto px-6">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link href="#home" className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                <Code className="h-5 w-5 text-white" />
+            {/* Brand */}
+            <Link href="#home" className="flex items-center gap-2 group">
+              <div className="w-8 h-8 flex items-center justify-center rounded-md bg-white text-black font-bold text-sm transition-transform group-hover:scale-105">
+                SJ
               </div>
-              <span className="text-xl font-bold gradient-text">Sanchit Jha</span>
+              <span className="hidden sm:inline text-primary text-sm font-medium tracking-tight">
+                Sanchit Jha
+              </span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center gap-1">
               {navItems.map((item) => {
-                const Icon = item.icon
-                const isActive = activeSection === item.href.substring(1)
-                if (item.name === "Schedule") return null          // shown as CTA button
+                const isActive = item.href.substring(1) === activeSection ||
+                  (item.name === "Work" && activeSection === "projects")
                 return (
                   <button
                     key={item.name}
                     onClick={() => handleNavClick(item.href)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm transition-all duration-300 ${
+                    className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
                       isActive
-                        ? "text-blue-400 bg-blue-500/10"
-                        : "text-gray-400 hover:text-white hover:bg-gray-800/50"
+                        ? "text-primary bg-white/5"
+                        : "text-secondary hover:text-primary hover:bg-white/[0.03]"
                     }`}
                   >
-                    <Icon className="h-3.5 w-3.5" />
-                    <span>{item.name}</span>
+                    {item.name}
                   </button>
                 )
               })}
-              <button
-                onClick={() => handleNavClick("#schedule")}
-                className={`ml-2 flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
-                  activeSection === "schedule"
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-500/30"
-                    : "bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500 hover:text-white"
-                }`}
-              >
-                <Calendar className="h-3.5 w-3.5" />
-                Schedule a Call
-              </button>
             </div>
 
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="lg:hidden p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
+            {/* Right cluster */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={openCommandPalette}
+                className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-xs text-secondary border border-default rounded-md hover:bg-white/5 transition-colors"
+              >
+                <Search className="w-3.5 h-3.5" />
+                <span className="hidden lg:inline">Search...</span>
+                <kbd className="kbd">{isMac ? "⌘" : "Ctrl"}K</kbd>
+              </button>
+
+              <button
+                onClick={() => handleNavClick("#schedule")}
+                className="hidden sm:inline-flex btn-base btn-primary !py-1.5 !px-3 !text-xs"
+              >
+                <Calendar className="w-3.5 h-3.5" />
+                Book a call
+              </button>
+
+              {/* Mobile burger */}
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="md:hidden p-2 rounded-md text-secondary hover:bg-white/5"
+              >
+                {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
       </motion.nav>
 
-      {/* Mobile Navigation */}
+      {/* Mobile drawer */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ type: "tween", duration: 0.3 }}
-            className="fixed inset-y-0 right-0 z-50 w-72 bg-gray-900/95 backdrop-blur-md border-l border-gray-800 lg:hidden"
-          >
-            <div className="flex flex-col h-full pt-20 px-6">
-              {navItems.map((item, index) => {
-                const Icon = item.icon
-                return (
-                  <motion.button
-                    key={item.name}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    onClick={() => handleNavClick(item.href)}
-                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg mb-2 transition-all duration-300 ${
-                      activeSection === item.href.substring(1)
-                        ? "text-blue-400 bg-blue-500/10"
-                        : "text-gray-300 hover:text-white hover:bg-gray-800/50"
-                    }`}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span>{item.name}</span>
-                  </motion.button>
-                )
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Mobile overlay */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsOpen(false)}
-            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          />
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/60 z-40 md:hidden"
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.25 }}
+              className="fixed inset-y-0 right-0 w-72 bg-[#0a0a0a] border-l border-[#1a1a1a] z-50 md:hidden pt-20 px-6"
+            >
+              {[...navItems, { name: "Schedule", href: "#schedule" }].map((item) => (
+                <button
+                  key={item.name}
+                  onClick={() => handleNavClick(item.href)}
+                  className="block w-full text-left py-3 text-secondary hover:text-primary border-b border-[#1a1a1a]"
+                >
+                  {item.name}
+                </button>
+              ))}
+              <button
+                onClick={() => { setIsOpen(false); openCommandPalette() }}
+                className="mt-6 w-full btn-base btn-secondary justify-center"
+              >
+                <Search className="w-4 h-4" /> Open Search
+              </button>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>
