@@ -24,17 +24,15 @@ const Contact    = dynamic(() => import("@/components/sections/Contact"),    { s
 
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+import CommandPalette from "@/components/CommandPalette"
 
 const Fallback = ({ height = "min-h-96" }) => <div className={height} />
 
 export default function HomePage() {
   return (
     <main className="relative min-h-screen">
-      <Suspense fallback={<LoadingSpinner />}>
-        <ParticleBackground />
-      </Suspense>
-
       <Navbar />
+      <CommandPalette />
 
       <div className="relative z-10">
         <Suspense fallback={<Fallback height="min-h-screen" />}>
