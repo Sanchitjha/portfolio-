@@ -6,7 +6,9 @@
       "Bash(timeout 18)",
       "mcp__Claude_Preview__preview_start",
       "Bash(ping -n 8 127.0.0.1)",
-      "mcp__Claude_in_Chrome__tabs_context_mcp"
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "WebFetch(domain:byshubham.com)",
+      "Bash(ping -n 12 127.0.0.1)"
     ]
   }
 }
