@@ -3,218 +3,141 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useInView } from "react-intersection-observer"
-import {
-  Calendar, Clock, Video, Phone, MessageSquare,
-  CheckCircle, ChevronLeft, ChevronRight, Send, Loader2
-} from "lucide-react"
+import { Video, Phone, MessageSquare, ChevronLeft, ChevronRight, Send, Loader2, Check } from "lucide-react"
 
-const MEETING_TYPES = [
-  {
-    id: "video",
-    icon: Video,
-    title: "Video Call",
-    subtitle: "Google Meet / Zoom",
-    duration: "30 min",
-    color: "blue",
-    desc: "Face-to-face discussion about your project or collaboration opportunity.",
-  },
-  {
-    id: "phone",
-    icon: Phone,
-    title: "Phone Call",
-    subtitle: "Direct call",
-    duration: "20 min",
-    color: "green",
-    desc: "Quick voice call for a brief intro or follow-up discussion.",
-  },
-  {
-    id: "chat",
-    icon: MessageSquare,
-    title: "Chat / Email",
-    subtitle: "Async conversation",
-    duration: "Flexible",
-    color: "purple",
-    desc: "Prefer async? Send a detailed message and I'll reply within 24 hours.",
-  },
+const TYPES = [
+  { id: "video", icon: Video,          title: "Video call",   sub: "Google Meet / Zoom", duration: "30 min" },
+  { id: "phone", icon: Phone,          title: "Phone call",   sub: "Direct call",        duration: "20 min" },
+  { id: "async", icon: MessageSquare,  title: "Async message",sub: "Email / Chat",       duration: "Flexible" },
 ]
 
-const TIME_SLOTS = [
-  "09:00 AM", "10:00 AM", "11:00 AM",
-  "12:00 PM", "02:00 PM", "03:00 PM",
-  "04:00 PM", "05:00 PM", "06:00 PM",
-]
+const SLOTS = ["09:00","10:00","11:00","12:00","14:00","15:00","16:00","17:00","18:00"]
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+const DAYS   = ["S","M","T","W","T","F","S"]
 
-function getDaysInMonth(year, month) {
-  return new Date(year, month + 1, 0).getDate()
-}
-function getFirstDayOfMonth(year, month) {
-  return new Date(year, month, 1).getDay()
-}
+function getDaysInMonth(y, m) { return new Date(y, m + 1, 0).getDate() }
+function getFirstDay(y, m)    { return new Date(y, m, 1).getDay() }
 
 export default function Schedule() {
-  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.1 })
-  const today = new Date()
-  const [step, setStep] = useState(1)
-  const [selectedType, setSelectedType] = useState(null)
-  const [currentMonth, setCurrentMonth] = useState(today.getMonth())
-  const [currentYear, setCurrentYear] = useState(today.getFullYear())
-  const [selectedDate, setSelectedDate] = useState(null)
-  const [selectedTime, setSelectedTime] = useState(null)
-  const [form, setForm] = useState({ name: "", email: "", topic: "", message: "" })
-  const [submitting, setSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 })
+  const now = new Date()
 
-  const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"]
-  const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
+  const [step,         setStep]         = useState(1)
+  const [type,         setType]         = useState(null)
+  const [month,        setMonth]        = useState(now.getMonth())
+  const [year,         setYear]         = useState(now.getFullYear())
+  const [day,          setDay]          = useState(null)
+  const [time,         setTime]         = useState(null)
+  const [form,         setForm]         = useState({ name:"", email:"", topic:"", note:"" })
+  const [submitting,   setSubmitting]   = useState(false)
+  const [done,         setDone]         = useState(false)
 
-  const daysInMonth = getDaysInMonth(currentYear, currentMonth)
-  const firstDay = getFirstDayOfMonth(currentYear, currentMonth)
+  const prevMonth = () => month === 0 ? (setMonth(11), setYear(y => y-1)) : setMonth(m => m-1)
+  const nextMonth = () => month === 11? (setMonth(0),  setYear(y => y+1)) : setMonth(m => m+1)
 
-  const prevMonth = () => {
-    if (currentMonth === 0) { setCurrentMonth(11); setCurrentYear(y => y - 1) }
-    else setCurrentMonth(m => m - 1)
-    setSelectedDate(null)
-  }
-  const nextMonth = () => {
-    if (currentMonth === 11) { setCurrentMonth(0); setCurrentYear(y => y + 1) }
-    else setCurrentMonth(m => m + 1)
-    setSelectedDate(null)
-  }
+  const isPast    = (d) => { const dt = new Date(year,month,d); dt.setHours(0,0,0,0); const t=new Date(); t.setHours(0,0,0,0); return dt<t }
+  const isWeekend = (d) => { const w = new Date(year,month,d).getDay(); return w===0||w===6 }
 
-  const isPast = (day) => {
-    const d = new Date(currentYear, currentMonth, day)
-    d.setHours(0,0,0,0)
-    const t = new Date(); t.setHours(0,0,0,0)
-    return d < t
-  }
-  const isWeekend = (day) => {
-    const d = new Date(currentYear, currentMonth, day).getDay()
-    return d === 0 || d === 6
-  }
+  const fmtDate = (d) => d ? new Date(year,month,d).toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"}) : ""
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true)
-    await new Promise(r => setTimeout(r, 1500))
+    await new Promise(r => setTimeout(r, 1200))
     setSubmitting(false)
-    setSubmitted(true)
+    setDone(true)
   }
 
-  const formatDate = (d) => d
-    ? new Date(currentYear, currentMonth, d).toLocaleDateString("en-US", {
-        weekday: "long", month: "long", day: "numeric", year: "numeric"
-      })
-    : ""
+  const reset = () => { setDone(false); setStep(1); setType(null); setDay(null); setTime(null); setForm({name:"",email:"",topic:"",note:""}) }
 
   return (
-    <section id="schedule" ref={ref} className="section-padding relative">
-      <div className="absolute inset-0 bg-pattern pointer-events-none" />
+    <section id="schedule" ref={ref} className="section-padding">
+      <div className="container mx-auto px-6 max-w-4xl">
 
-      <div className="container mx-auto px-6 relative z-10">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-14"
+          transition={{ duration: 0.5 }}
+          className="mb-14"
         >
-          <span className="text-blue-400 text-sm font-semibold tracking-widest uppercase mb-3 block">
-            Let's Connect
-          </span>
-          <h2 className="text-4xl lg:text-5xl font-black text-white mb-4">
-            Schedule a <span className="gradient-text">Meeting</span>
-          </h2>
-          <p className="text-gray-400 max-w-xl mx-auto">
-            Book a call, video meeting, or send a detailed message. I'm available for new projects,
-            collaborations, and opportunities.
+          <span className="section-label mb-3">Availability</span>
+          <h2 className="heading-display text-4xl lg:text-5xl mt-3">Book a meeting.</h2>
+          <p className="text-secondary mt-3 max-w-md">
+            Pick a time that works — I respond within a few hours.
           </p>
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-4xl mx-auto"
+          transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {/* Stepper */}
-          {!submitted && (
-            <div className="flex items-center justify-center mb-10 gap-3">
-              {[1, 2, 3].map((s) => (
+          {/* Step indicator */}
+          {!done && (
+            <div className="flex items-center gap-3 mb-10">
+              {[1,2,3].map((s) => (
                 <div key={s} className="flex items-center gap-3">
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all duration-300 ${
-                    step >= s
-                      ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
-                      : "bg-gray-800 text-gray-500 border border-gray-700"
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold border transition-all ${
+                    step > s
+                      ? "bg-white text-black border-white"
+                      : step === s
+                      ? "border-white text-primary"
+                      : "border-[#2a2a2a] text-tertiary"
                   }`}>
-                    {step > s ? <CheckCircle className="w-5 h-5" /> : s}
+                    {step > s ? <Check className="w-3.5 h-3.5" /> : s}
                   </div>
-                  <span className={`text-sm hidden sm:block ${step >= s ? "text-white" : "text-gray-500"}`}>
-                    {s === 1 ? "Type" : s === 2 ? "Date & Time" : "Details"}
+                  <span className={`text-xs mono hidden sm:block ${step >= s ? "text-secondary" : "text-tertiary"}`}>
+                    {s===1?"Type":s===2?"Date & time":"Details"}
                   </span>
-                  {s < 3 && <div className={`w-12 h-px ${step > s ? "bg-blue-500" : "bg-gray-700"}`} />}
+                  {s < 3 && <div className={`w-8 h-px ${step > s ? "bg-white/30" : "bg-[#1f1f1f]"}`} />}
                 </div>
               ))}
             </div>
           )}
 
           <AnimatePresence mode="wait">
+
             {/* SUCCESS */}
-            {submitted && (
+            {done && (
               <motion.div
-                key="success"
-                initial={{ opacity: 0, scale: 0.9 }}
+                key="done"
+                initial={{ opacity: 0, scale: 0.97 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="glass rounded-3xl p-12 border border-gray-700/50 text-center"
+                className="card rounded-2xl p-10 text-center"
               >
-                <div className="w-20 h-20 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle className="w-10 h-10 text-green-400" />
+                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mx-auto mb-6">
+                  <Check className="w-5 h-5 text-primary" />
                 </div>
-                <h3 className="text-2xl font-black text-white mb-3">Meeting Requested!</h3>
-                <p className="text-gray-400 mb-2">
-                  Thanks <span className="text-white font-semibold">{form.name}</span>! I'll confirm your{" "}
-                  <span className="text-blue-400 font-semibold">
-                    {MEETING_TYPES.find(t => t.id === selectedType)?.title}
-                  </span>{" "}
-                  on <span className="text-white">{formatDate(selectedDate)}</span> at{" "}
-                  <span className="text-white">{selectedTime}</span>.
+                <h3 className="text-xl font-semibold text-primary mb-2">Request sent.</h3>
+                <p className="text-secondary text-sm mb-1">
+                  <span className="text-primary">{TYPES.find(t=>t.id===type)?.title}</span> · {fmtDate(day)} · {time}
                 </p>
-                <p className="text-gray-500 text-sm mb-8">
-                  Confirmation will be sent to <span className="text-blue-400">{form.email}</span> within a few hours.
-                </p>
-                <button
-                  onClick={() => { setSubmitted(false); setStep(1); setSelectedType(null); setSelectedDate(null); setSelectedTime(null); setForm({ name:"",email:"",topic:"",message:"" }) }}
-                  className="px-6 py-3 rounded-xl border border-gray-700 text-gray-300 hover:bg-gray-800 transition-all"
-                >
-                  Schedule Another
-                </button>
+                <p className="text-tertiary text-xs mono mb-8">Confirmation → {form.email}</p>
+                <button onClick={reset} className="btn-base btn-secondary">Schedule another</button>
               </motion.div>
             )}
 
-            {/* STEP 1 — Meeting Type */}
-            {!submitted && step === 1 && (
-              <motion.div key="step1" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
-                <h3 className="text-white font-bold text-xl mb-6 text-center">Choose a Meeting Type</h3>
-                <div className="grid sm:grid-cols-3 gap-4 mb-8">
-                  {MEETING_TYPES.map((type) => {
-                    const Icon = type.icon
+            {/* STEP 1 — Type */}
+            {!done && step === 1 && (
+              <motion.div key="s1" initial={{ opacity:0, x:20 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-20 }}>
+                <div className="grid sm:grid-cols-3 gap-3 mb-8">
+                  {TYPES.map((t) => {
+                    const Icon = t.icon
                     return (
                       <button
-                        key={type.id}
-                        onClick={() => setSelectedType(type.id)}
-                        className={`glass rounded-2xl p-6 border text-left transition-all duration-300 ${
-                          selectedType === type.id
-                            ? `border-${type.color}-500/60 bg-${type.color}-500/10 shadow-lg shadow-${type.color}-500/20`
-                            : "border-gray-700/50 hover:border-gray-600"
+                        key={t.id}
+                        onClick={() => setType(t.id)}
+                        className={`card rounded-xl p-5 text-left transition-all ${
+                          type === t.id ? "border-white/30 bg-white/5" : "hover:border-[#2a2a2a]"
                         }`}
                       >
-                        <div className={`p-3 rounded-xl bg-${type.color}-500/10 text-${type.color}-400 w-fit mb-4`}>
-                          <Icon className="w-6 h-6" />
-                        </div>
-                        <h4 className="text-white font-bold mb-1">{type.title}</h4>
-                        <p className="text-gray-500 text-xs mb-2">{type.subtitle} · {type.duration}</p>
-                        <p className="text-gray-400 text-sm">{type.desc}</p>
-                        {selectedType === type.id && (
-                          <div className={`mt-3 flex items-center gap-1 text-${type.color}-400 text-xs font-semibold`}>
-                            <CheckCircle className="w-3.5 h-3.5" /> Selected
+                        <Icon className={`w-5 h-5 mb-3 ${type === t.id ? "text-primary" : "text-tertiary"}`} />
+                        <p className="text-primary text-sm font-semibold">{t.title}</p>
+                        <p className="text-tertiary text-xs mono mt-1">{t.sub} · {t.duration}</p>
+                        {type === t.id && (
+                          <div className="mt-3 flex items-center gap-1 text-xs mono text-secondary">
+                            <Check className="w-3 h-3" /> selected
                           </div>
                         )}
                       </button>
@@ -222,81 +145,79 @@ export default function Schedule() {
                   })}
                 </div>
                 <div className="flex justify-end">
-                  <button
-                    disabled={!selectedType}
-                    onClick={() => setStep(2)}
-                    className="px-7 py-3 rounded-xl bg-blue-500 text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/25"
-                  >
-                    Next: Pick a Date →
+                  <button disabled={!type} onClick={() => setStep(2)} className="btn-base btn-primary disabled:opacity-30">
+                    Next →
                   </button>
                 </div>
               </motion.div>
             )}
 
             {/* STEP 2 — Calendar + Time */}
-            {!submitted && step === 2 && (
-              <motion.div key="step2" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
-                <div className="grid md:grid-cols-2 gap-6 mb-8">
+            {!done && step === 2 && (
+              <motion.div key="s2" initial={{ opacity:0, x:20 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-20 }}>
+                <div className="grid md:grid-cols-2 gap-4 mb-8">
+
                   {/* Calendar */}
-                  <div className="glass rounded-2xl p-5 border border-gray-700/50">
-                    <div className="flex items-center justify-between mb-4">
-                      <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 transition-colors">
-                        <ChevronLeft className="w-5 h-5" />
+                  <div className="card rounded-xl p-5">
+                    <div className="flex items-center justify-between mb-5">
+                      <button onClick={prevMonth} className="p-1.5 rounded-md hover:bg-white/5 text-secondary transition-colors">
+                        <ChevronLeft className="w-4 h-4" />
                       </button>
-                      <h4 className="text-white font-bold">{MONTHS[currentMonth]} {currentYear}</h4>
-                      <button onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 transition-colors">
-                        <ChevronRight className="w-5 h-5" />
+                      <span className="text-primary text-sm font-medium mono">
+                        {MONTHS[month]} {year}
+                      </span>
+                      <button onClick={nextMonth} className="p-1.5 rounded-md hover:bg-white/5 text-secondary transition-colors">
+                        <ChevronRight className="w-4 h-4" />
                       </button>
                     </div>
                     <div className="grid grid-cols-7 gap-1 mb-2">
-                      {DAYS.map(d => (
-                        <div key={d} className="text-center text-xs text-gray-500 font-medium py-1">{d}</div>
+                      {DAYS.map((d,i) => (
+                        <div key={i} className="text-center text-[10px] text-tertiary mono py-1">{d}</div>
                       ))}
                     </div>
                     <div className="grid grid-cols-7 gap-1">
-                      {Array(firstDay).fill(null).map((_, i) => <div key={`e${i}`} />)}
-                      {Array(daysInMonth).fill(null).map((_, i) => {
-                        const day = i + 1
-                        const past = isPast(day)
-                        const weekend = isWeekend(day)
-                        const sel = selectedDate === day
+                      {Array(getFirstDay(year,month)).fill(null).map((_,i) => <div key={`e${i}`} />)}
+                      {Array(getDaysInMonth(year,month)).fill(null).map((_,i) => {
+                        const d = i+1
+                        const past = isPast(d), wknd = isWeekend(d), sel = day===d
                         return (
                           <button
-                            key={day}
-                            disabled={past || weekend}
-                            onClick={() => setSelectedDate(day)}
-                            className={`aspect-square rounded-lg text-sm font-medium transition-all duration-200 ${
+                            key={d}
+                            disabled={past||wknd}
+                            onClick={() => { setDay(d); setTime(null) }}
+                            className={`aspect-square rounded-md text-xs font-medium transition-all ${
                               sel
-                                ? "bg-blue-500 text-white shadow-md shadow-blue-500/30"
-                                : past || weekend
-                                ? "text-gray-700 cursor-not-allowed"
-                                : "text-gray-300 hover:bg-gray-700/60"
+                                ? "bg-white text-black"
+                                : past||wknd
+                                ? "text-[#2a2a2a] cursor-not-allowed"
+                                : "text-secondary hover:bg-white/5 hover:text-primary"
                             }`}
                           >
-                            {day}
+                            {d}
                           </button>
                         )
                       })}
                     </div>
-                    <p className="text-gray-600 text-xs mt-3 text-center">Weekends unavailable · IST (UTC+5:30)</p>
+                    <p className="text-[10px] text-tertiary mono mt-3 text-center">
+                      Mon–Fri · IST UTC+5:30
+                    </p>
                   </div>
 
-                  {/* Time Slots */}
-                  <div className="glass rounded-2xl p-5 border border-gray-700/50">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Clock className="w-4 h-4 text-blue-400" />
-                      <h4 className="text-white font-bold">Available Times</h4>
-                    </div>
-                    {selectedDate ? (
-                      <div className="grid grid-cols-2 gap-2">
-                        {TIME_SLOTS.map((slot) => (
+                  {/* Time slots */}
+                  <div className="card rounded-xl p-5">
+                    <p className="text-xs text-tertiary mono uppercase tracking-wider mb-4">
+                      {day ? fmtDate(day) : "Select a date"}
+                    </p>
+                    {day ? (
+                      <div className="grid grid-cols-3 gap-2">
+                        {SLOTS.map((slot) => (
                           <button
                             key={slot}
-                            onClick={() => setSelectedTime(slot)}
-                            className={`py-2.5 px-3 rounded-xl text-sm font-medium border transition-all duration-200 ${
-                              selectedTime === slot
-                                ? "bg-blue-500 border-blue-500 text-white shadow-md shadow-blue-500/25"
-                                : "border-gray-700/50 text-gray-400 hover:border-blue-500/40 hover:text-white"
+                            onClick={() => setTime(slot)}
+                            className={`py-2 px-2 rounded-md text-xs mono font-medium border transition-all ${
+                              time===slot
+                                ? "bg-white text-black border-white"
+                                : "border-[#1f1f1f] text-secondary hover:border-[#2a2a2a] hover:text-primary"
                             }`}
                           >
                             {slot}
@@ -304,109 +225,80 @@ export default function Schedule() {
                         ))}
                       </div>
                     ) : (
-                      <div className="flex items-center justify-center h-40 text-gray-600 text-sm">
-                        ← Pick a date first
-                      </div>
-                    )}
-                    {selectedDate && selectedTime && (
-                      <div className="mt-4 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20">
-                        <p className="text-blue-300 text-sm font-medium">
-                          {formatDate(selectedDate)} · {selectedTime}
-                        </p>
+                      <div className="h-40 flex items-center justify-center text-tertiary text-sm">
+                        ← pick a date
                       </div>
                     )}
                   </div>
                 </div>
 
                 <div className="flex justify-between">
-                  <button onClick={() => setStep(1)} className="flex items-center gap-2 px-5 py-3 rounded-xl border border-gray-700 text-gray-400 hover:bg-gray-800 transition-all">
+                  <button onClick={() => setStep(1)} className="btn-base btn-ghost">
                     <ChevronLeft className="w-4 h-4" /> Back
                   </button>
                   <button
-                    disabled={!selectedDate || !selectedTime}
+                    disabled={!day || !time}
                     onClick={() => setStep(3)}
-                    className="px-7 py-3 rounded-xl bg-blue-500 text-white font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/25"
+                    className="btn-base btn-primary disabled:opacity-30"
                   >
-                    Next: Your Details →
+                    Next →
                   </button>
                 </div>
               </motion.div>
             )}
 
-            {/* STEP 3 — Details Form */}
-            {!submitted && step === 3 && (
-              <motion.div key="step3" initial={{ opacity: 0, x: 40 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -40 }}>
-                <div className="glass rounded-2xl p-6 border border-gray-700/50 mb-4">
-                  <div className="flex flex-wrap gap-3 text-sm">
-                    <span className="flex items-center gap-1.5 text-blue-400 font-medium">
-                      {(() => { const t = MEETING_TYPES.find(t => t.id === selectedType); if (!t) return null; const Icon = t.icon; return <><Icon className="w-4 h-4" />{t.title}</> })()}
-                    </span>
-                    <span className="text-gray-600">·</span>
-                    <span className="flex items-center gap-1.5 text-gray-300">
-                      <Calendar className="w-4 h-4" />{formatDate(selectedDate)}
-                    </span>
-                    <span className="text-gray-600">·</span>
-                    <span className="flex items-center gap-1.5 text-gray-300">
-                      <Clock className="w-4 h-4" />{selectedTime}
-                    </span>
-                  </div>
+            {/* STEP 3 — Details */}
+            {!done && step === 3 && (
+              <motion.div key="s3" initial={{ opacity:0, x:20 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-20 }}>
+                {/* Summary strip */}
+                <div className="card rounded-xl px-5 py-3 mb-5 flex flex-wrap gap-4 text-xs mono text-secondary">
+                  <span>{TYPES.find(t=>t.id===type)?.title}</span>
+                  <span className="text-tertiary">·</span>
+                  <span>{fmtDate(day)}</span>
+                  <span className="text-tertiary">·</span>
+                  <span>{time} IST</span>
                 </div>
 
-                <form onSubmit={handleSubmit} className="glass rounded-2xl p-6 border border-gray-700/50 space-y-4">
+                <form onSubmit={handleSubmit} className="card rounded-xl p-6 space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-gray-400 text-sm mb-1.5 block">Your Name *</label>
-                      <input
-                        required
-                        value={form.name}
-                        onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                        placeholder="John Doe"
-                        className="w-full bg-gray-800/60 border border-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/60 transition-colors text-sm"
-                      />
+                      <label className="text-xs text-tertiary mono block mb-1.5">Name *</label>
+                      <input required value={form.name}
+                        onChange={e => setForm(f=>({...f,name:e.target.value}))}
+                        placeholder="Your name"
+                        className="input-base" />
                     </div>
                     <div>
-                      <label className="text-gray-400 text-sm mb-1.5 block">Email Address *</label>
-                      <input
-                        required
-                        type="email"
-                        value={form.email}
-                        onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
-                        placeholder="john@example.com"
-                        className="w-full bg-gray-800/60 border border-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/60 transition-colors text-sm"
-                      />
+                      <label className="text-xs text-tertiary mono block mb-1.5">Email *</label>
+                      <input required type="email" value={form.email}
+                        onChange={e => setForm(f=>({...f,email:e.target.value}))}
+                        placeholder="you@example.com"
+                        className="input-base" />
                     </div>
                   </div>
                   <div>
-                    <label className="text-gray-400 text-sm mb-1.5 block">Meeting Topic *</label>
-                    <input
-                      required
-                      value={form.topic}
-                      onChange={e => setForm(f => ({ ...f, topic: e.target.value }))}
-                      placeholder="e.g. Project collaboration, Job opportunity, Freelance work..."
-                      className="w-full bg-gray-800/60 border border-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/60 transition-colors text-sm"
-                    />
+                    <label className="text-xs text-tertiary mono block mb-1.5">Topic *</label>
+                    <input required value={form.topic}
+                      onChange={e => setForm(f=>({...f,topic:e.target.value}))}
+                      placeholder="e.g. Project collaboration, job opportunity..."
+                      className="input-base" />
                   </div>
                   <div>
-                    <label className="text-gray-400 text-sm mb-1.5 block">Additional Notes</label>
-                    <textarea
-                      rows={3}
-                      value={form.message}
-                      onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
-                      placeholder="Any context, links, or details that would help make our meeting productive..."
-                      className="w-full bg-gray-800/60 border border-gray-700/50 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/60 transition-colors text-sm resize-none"
-                    />
+                    <label className="text-xs text-tertiary mono block mb-1.5">Notes</label>
+                    <textarea rows={3} value={form.note}
+                      onChange={e => setForm(f=>({...f,note:e.target.value}))}
+                      placeholder="Any context or links that'd help..."
+                      className="input-base resize-none" />
                   </div>
 
                   <div className="flex justify-between pt-2">
-                    <button type="button" onClick={() => setStep(2)} className="flex items-center gap-2 px-5 py-3 rounded-xl border border-gray-700 text-gray-400 hover:bg-gray-800 transition-all">
+                    <button type="button" onClick={() => setStep(2)} className="btn-base btn-ghost">
                       <ChevronLeft className="w-4 h-4" /> Back
                     </button>
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="flex items-center gap-2 px-7 py-3 rounded-xl bg-blue-500 text-white font-semibold hover:bg-blue-600 disabled:opacity-60 transition-all shadow-lg shadow-blue-500/25"
-                    >
-                      {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Scheduling...</> : <><Send className="w-4 h-4" /> Confirm Meeting</>}
+                    <button type="submit" disabled={submitting} className="btn-base btn-primary disabled:opacity-60">
+                      {submitting
+                        ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>
+                        : <><Send className="w-4 h-4" /> Confirm</>}
                     </button>
                   </div>
                 </form>

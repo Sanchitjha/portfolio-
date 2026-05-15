@@ -2,17 +2,8 @@
 
 import { Suspense } from "react"
 import dynamic from "next/dynamic"
-import LoadingSpinner from "@/components/LoadingSpinner"
 
-const ParticleBackground = dynamic(() => import("@/components/3d/ParticleBackground"), {
-  ssr: false,
-  loading: () => <div className="fixed inset-0 bg-gradient-to-br from-slate-900 to-blue-900" />,
-})
-
-const Hero = dynamic(() => import("@/components/sections/Hero"), {
-  ssr: false,
-  loading: () => <div className="min-h-screen bg-gradient-to-br from-slate-900 to-blue-900" />,
-})
+const Hero = dynamic(() => import("@/components/sections/Hero"), { ssr: false })
 
 const About      = dynamic(() => import("@/components/sections/About"),      { ssr: false })
 const Skills     = dynamic(() => import("@/components/sections/Skills"),     { ssr: false })
@@ -30,7 +21,7 @@ const Fallback = ({ height = "min-h-96" }) => <div className={height} />
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-screen">
+    <main className="min-h-screen">
       <Navbar />
       <CommandPalette />
 
