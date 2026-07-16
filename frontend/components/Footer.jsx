@@ -1,46 +1,67 @@
 "use client"
 
 import Link from "next/link"
-import { Github, Linkedin, Mail, Code } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
+
+const NAV_LINKS = [
+  { label: "Work",     href: "#projects" },
+  { label: "About",    href: "#about" },
+  { label: "Resume",   href: "#resume" },
+  { label: "Contact",  href: "#contact" },
+]
+
+const SOCIAL_LINKS = [
+  { label: "GitHub",   href: "https://github.com/Sanchitjha" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/sanchit-jha-844b17255" },
+  { label: "Email",    href: "mailto:sanchitjha8888@gmail.com" },
+]
 
 export default function Footer() {
+  const go = (href) => document.querySelector(href)?.scrollIntoView({ behavior: "smooth" })
+
   return (
-    <footer className="relative z-10 border-t border-gray-800 bg-gray-900/80 backdrop-blur-md">
-      <div className="container mx-auto px-6 py-10">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-              <Code className="h-5 w-5 text-white" />
-            </div>
-            <span className="text-xl font-bold gradient-text">Sanchit Jha</span>
+    <footer className="border-t border-[#1c1c1c]">
+      <div className="container-main">
+
+        {/* Main row */}
+        <div className="flex flex-wrap items-center justify-between gap-6 py-8">
+          <div className="flex flex-wrap items-center gap-6">
+            <button
+              onClick={() => go("#home")}
+              className="text-sm font-semibold text-[#e8e8e8] hover:text-white transition-colors"
+            >
+              Sanchit Jha
+            </button>
+            <span className="text-[#1c1c1c]">|</span>
+            {NAV_LINKS.map((n) => (
+              <button
+                key={n.label}
+                onClick={() => go(n.href)}
+                className="text-xs text-[#444] hover:text-[#888] transition-colors mono"
+              >
+                {n.label}
+              </button>
+            ))}
           </div>
 
-          <p className="text-gray-400 text-sm text-center">
-            © {new Date().getFullYear()} Sanchit Jha. Built with Next.js & Framer Motion.
-          </p>
-
-          <div className="flex space-x-4">
-            <Link
-              href="https://github.com/Sanchitjha"
-              target="_blank"
-              className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-            >
-              <Github className="h-5 w-5" />
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/sanchit-jha-844b17255"
-              target="_blank"
-              className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-            >
-              <Linkedin className="h-5 w-5" />
-            </Link>
-            <Link
-              href="mailto:sanchitjha8888@gmail.com"
-              className="p-2 rounded-full bg-gray-800 hover:bg-gray-700 transition-colors"
-            >
-              <Mail className="h-5 w-5" />
-            </Link>
+          <div className="flex items-center gap-5">
+            {SOCIAL_LINKS.map((l) => (
+              <Link
+                key={l.label}
+                href={l.href}
+                target="_blank"
+                className="text-xs text-[#444] hover:text-[#888] transition-colors mono"
+              >
+                {l.label}
+              </Link>
+            ))}
           </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="border-t border-[#1c1c1c] py-4 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-[#333] text-xs mono">© {new Date().getFullYear()} Sanchit Jha</p>
+          <p className="text-[#252525] text-xs mono">Next.js · Three.js · shadcn/ui</p>
         </div>
       </div>
     </footer>

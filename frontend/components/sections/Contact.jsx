@@ -3,18 +3,12 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
-import { ArrowUpRight, Send, Loader2, Check, Mail, Github, Linkedin, Calendar } from "lucide-react"
+import { ArrowUpRight, Send, Loader2, Check } from "lucide-react"
 import Link from "next/link"
-
-const LINKS = [
-  { icon: Github,   label: "GitHub",   sub: "github.com/Sanchitjha",                href: "https://github.com/Sanchitjha" },
-  { icon: Linkedin, label: "LinkedIn", sub: "sanchit-jha-844b17255",                href: "https://www.linkedin.com/in/sanchit-jha-844b17255" },
-  { icon: Mail,     label: "Email",    sub: "sanchitjha8888@gmail.com",              href: "mailto:sanchitjha8888@gmail.com" },
-]
 
 export default function Contact() {
   const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.05 })
-  const [form,       setForm]       = useState({ name:"", email:"", subject:"", message:"" })
+  const [form,       setForm]       = useState({ name: "", email: "", message: "" })
   const [submitting, setSubmitting] = useState(false)
   const [done,       setDone]       = useState(false)
 
@@ -35,157 +29,117 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" ref={ref} className="section-padding">
-      <div className="container mx-auto px-6 max-w-6xl">
-
-        {/* Header */}
+    <section id="contact" ref={ref} className="section-gap">
+      <div className="container-main">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.5 }}
-          className="mb-14"
+          transition={{ duration: 0.55 }}
         >
-          <span className="section-label mb-3">Contact</span>
-          <h2 className="heading-display text-4xl lg:text-5xl mt-3">Get in touch.</h2>
-          <p className="text-secondary mt-3 max-w-md">
-            Open to new projects, collaborations, and opportunities. I reply within 24 hours.
-          </p>
-        </motion.div>
+          <span className="section-tag">Contact</span>
 
-        <div className="grid lg:grid-cols-5 gap-10">
-
-          {/* LEFT — Links */}
-          <motion.div
-            initial={{ opacity: 0, x: -16 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="lg:col-span-2 space-y-3"
-          >
-            {LINKS.map((l) => {
-              const Icon = l.icon
-              return (
-                <Link
-                  key={l.label}
-                  href={l.href}
-                  target="_blank"
-                  className="card rounded-xl p-4 flex items-center justify-between group block"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                      <Icon className="w-4 h-4 text-secondary" />
-                    </div>
-                    <div>
-                      <p className="text-primary text-sm font-medium">{l.label}</p>
-                      <p className="text-tertiary text-xs mono truncate max-w-[160px]">{l.sub}</p>
-                    </div>
-                  </div>
-                  <ArrowUpRight className="w-4 h-4 text-tertiary group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
-                </Link>
-              )
-            })}
-
-            {/* Schedule CTA */}
-            <button
-              onClick={() => document.querySelector("#schedule")?.scrollIntoView({ behavior: "smooth" })}
-              className="card rounded-xl p-4 flex items-center justify-between w-full text-left group"
+          {/* Giant email focal point */}
+          <div className="mt-6 mb-14">
+            <Link
+              href="mailto:sanchitjha8888@gmail.com"
+              className="group inline-flex items-start gap-3 text-[clamp(1.6rem,4vw,2.8rem)] font-bold display text-[#e8e8e8] hover:text-white transition-colors leading-tight"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">
-                  <Calendar className="w-4 h-4 text-secondary" />
-                </div>
-                <div>
-                  <p className="text-primary text-sm font-medium">Book a call</p>
-                  <p className="text-tertiary text-xs mono">30 min · Google Meet</p>
-                </div>
-              </div>
-              <ArrowUpRight className="w-4 h-4 text-tertiary group-hover:text-primary group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
-            </button>
+              <span>
+                sanchitjha8888<br />@gmail.com
+              </span>
+              <ArrowUpRight className="w-6 h-6 mt-2 text-[#444] group-hover:text-[#888] transition-colors shrink-0" />
+            </Link>
+            <p className="text-[#444] text-sm mt-4 mono">
+              Available · full-time · freelance · contract · Reply within 24 h.
+            </p>
+          </div>
 
-            {/* Availability note */}
-            <div className="card rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="dot-pulse" />
-                <span className="text-primary text-sm font-medium">Available</span>
-              </div>
-              <p className="text-tertiary text-xs mono">
-                Open to full-time, freelance &amp; contract work.<br />
-                Response time: &lt; 24 hours.
-              </p>
-            </div>
-          </motion.div>
+          <div className="grid lg:grid-cols-12 gap-16">
 
-          {/* RIGHT — Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 16 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.15 }}
-            className="lg:col-span-3"
-          >
-            {done ? (
-              <div className="card rounded-2xl p-10 h-full flex flex-col items-center justify-center text-center">
-                <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center mb-5">
-                  <Check className="w-5 h-5 text-primary" />
+            {/* Form */}
+            <div className="lg:col-span-7">
+              {done ? (
+                <div className="py-12">
+                  <Check className="w-5 h-5 text-[#888] mb-4" />
+                  <p className="text-[#888] text-sm mb-1">Message sent.</p>
+                  <p className="text-[#444] text-xs mono">
+                    I'll reply to <span className="text-[#666]">{form.email}</span> within 24 h.
+                  </p>
+                  <button
+                    onClick={() => { setDone(false); setForm({ name: "", email: "", message: "" }) }}
+                    className="mt-6 text-xs text-[#444] hover:text-[#888] transition-colors underline"
+                  >
+                    Send another
+                  </button>
                 </div>
-                <h3 className="text-lg font-semibold text-primary mb-2">Message sent.</h3>
-                <p className="text-secondary text-sm mb-6">
-                  I'll get back to you at{" "}
-                  <span className="text-primary mono">{form.email}</span> within 24 h.
-                </p>
-                <button
-                  onClick={() => { setDone(false); setForm({name:"",email:"",subject:"",message:""}) }}
-                  className="btn-base btn-secondary"
-                >
-                  Send another
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="card rounded-2xl p-6 space-y-4">
-                <div className="grid sm:grid-cols-2 gap-4">
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-7">
                   <div>
-                    <label className="text-xs text-tertiary mono block mb-1.5">Name *</label>
+                    <label className="label block mb-2">Name *</label>
                     <input
                       name="name" required value={form.name} onChange={handleChange}
-                      placeholder="Your name"
-                      className="input-base"
+                      placeholder="Your name" className="input"
                     />
                   </div>
                   <div>
-                    <label className="text-xs text-tertiary mono block mb-1.5">Email *</label>
+                    <label className="label block mb-2">Email *</label>
                     <input
                       name="email" type="email" required value={form.email} onChange={handleChange}
-                      placeholder="you@example.com"
-                      className="input-base"
+                      placeholder="you@example.com" className="input"
                     />
                   </div>
-                </div>
-                <div>
-                  <label className="text-xs text-tertiary mono block mb-1.5">Subject *</label>
-                  <input
-                    name="subject" required value={form.subject} onChange={handleChange}
-                    placeholder="e.g. Project inquiry, job opportunity…"
-                    className="input-base"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs text-tertiary mono block mb-1.5">Message *</label>
-                  <textarea
-                    name="message" required rows={5} value={form.message} onChange={handleChange}
-                    placeholder="Tell me about your project, idea, or opportunity…"
-                    className="input-base resize-none"
-                  />
-                </div>
+                  <div>
+                    <label className="label block mb-2">Message *</label>
+                    <textarea
+                      name="message" required rows={4} value={form.message} onChange={handleChange}
+                      placeholder="Tell me about your project…" className="input"
+                    />
+                  </div>
+                  <button type="submit" disabled={submitting} className="btn btn-white disabled:opacity-50">
+                    {submitting
+                      ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>
+                      : <><Send className="w-4 h-4" /> Send message</>}
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Links sidebar */}
+            <div className="lg:col-span-5">
+              <div className="divide-y divide-[#1c1c1c]">
+                {[
+                  { label: "GitHub",   sub: "github.com/Sanchitjha",  href: "https://github.com/Sanchitjha",                         external: true },
+                  { label: "LinkedIn", sub: "sanchit-jha-844b17255",  href: "https://www.linkedin.com/in/sanchit-jha-844b17255",      external: true },
+                  { label: "Resume",   sub: "Download PDF",            href: "/sanchit-jha-resume.pdf",                               external: true },
+                ].map((l) => (
+                  <Link
+                    key={l.label}
+                    href={l.href}
+                    target="_blank"
+                    className="group flex items-center justify-between py-4 text-sm text-[#888] hover:text-[#e8e8e8] transition-colors"
+                  >
+                    <div>
+                      <span className="font-medium">{l.label}</span>
+                      <span className="text-[#444] text-xs mono block">{l.sub}</span>
+                    </div>
+                    <ArrowUpRight className="w-3.5 h-3.5 text-[#333] group-hover:text-[#666] transition-colors" />
+                  </Link>
+                ))}
+
                 <button
-                  type="submit" disabled={submitting}
-                  className="w-full btn-base btn-primary justify-center disabled:opacity-60"
+                  onClick={() => document.querySelector("#schedule")?.scrollIntoView({ behavior: "smooth" })}
+                  className="group flex items-center justify-between w-full py-4 text-sm text-[#888] hover:text-[#e8e8e8] transition-colors text-left"
                 >
-                  {submitting
-                    ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>
-                    : <><Send className="w-4 h-4" /> Send message</>}
+                  <div>
+                    <span className="font-medium">Book a call</span>
+                    <span className="text-[#444] text-xs mono block">30 min · Google Meet</span>
+                  </div>
+                  <ArrowUpRight className="w-3.5 h-3.5 text-[#333] group-hover:text-[#666] transition-colors" />
                 </button>
-              </form>
-            )}
-          </motion.div>
-        </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )

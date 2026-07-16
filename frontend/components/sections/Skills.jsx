@@ -3,51 +3,46 @@
 import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
 
-const skills = [
-  { category: "Backend", items: ["Node.js", "Express.js", "REST APIs", "Socket.io", "JWT Auth"] },
-  { category: "Database", items: ["MongoDB", "Mongoose", "PostgreSQL", "Redis", "Firebase"] },
-  { category: "Frontend", items: ["React", "Next.js", "Tailwind CSS", "Framer Motion", "HTML/CSS"] },
-  { category: "DevOps & Tools", items: ["Git", "GitHub", "Docker", "Postman", "VS Code"] },
+const STACK = [
+  { label: "Backend",        items: ["Node.js", "Express.js", "REST APIs", "Socket.io", "JWT / Auth"] },
+  { label: "Database",       items: ["MongoDB", "Mongoose", "PostgreSQL", "Redis", "Firebase"] },
+  { label: "Frontend",       items: ["React", "Next.js", "Tailwind CSS", "Framer Motion", "HTML / CSS"] },
+  { label: "DevOps & Tools", items: ["Git / GitHub", "Docker", "Linux CLI", "Postman", "VS Code"] },
 ]
 
 export default function Skills() {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 })
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.08 })
 
   return (
-    <section id="skills" className="section-padding bg-pattern">
-      <div className="container mx-auto px-6">
+    <section id="skills" ref={ref} className="section-gap">
+      <div className="container-main">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="max-w-6xl mx-auto"
+          transition={{ duration: 0.55 }}
         >
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">Skills</h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Technologies and tools I work with
-            </p>
-          </div>
+          <span className="section-tag">Stack</span>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {skills.map((group, i) => (
+          <div className="divide-y divide-[#1c1c1c] mt-4">
+            {STACK.map(({ label, items }, i) => (
               <motion.div
-                key={group.category}
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="glass rounded-2xl p-6 card-hover"
+                key={label}
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: i * 0.07 }}
+                className="flex flex-col sm:flex-row sm:items-start gap-4 py-5"
               >
-                <h3 className="text-lg font-bold text-blue-400 mb-4">{group.category}</h3>
-                <ul className="space-y-2">
-                  {group.items.map((skill) => (
-                    <li key={skill} className="flex items-center space-x-2 text-gray-300 text-sm">
-                      <div className="w-1.5 h-1.5 bg-blue-400 rounded-full flex-shrink-0" />
-                      <span>{skill}</span>
-                    </li>
+                <span className="text-[#444] text-sm mono shrink-0 w-32">{label}</span>
+                <div className="flex flex-wrap gap-2">
+                  {items.map((skill) => (
+                    <span
+                      key={skill}
+                      className="text-[#666] text-sm border border-[#1c1c1c] px-2.5 py-0.5 rounded-sm hover:border-[#2a2a2a] hover:text-[#888] transition-colors"
+                    >
+                      {skill}
+                    </span>
                   ))}
-                </ul>
+                </div>
               </motion.div>
             ))}
           </div>

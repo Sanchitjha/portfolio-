@@ -2,74 +2,94 @@
 
 import { motion } from "framer-motion"
 import { useInView } from "react-intersection-observer"
-import { Briefcase } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
+import Link from "next/link"
 
-const experiences = [
+const EXPERIENCES = [
   {
-    title: "Backend Developer",
+    role: "Backend Developer",
     company: "Freelance / Personal Projects",
     period: "2023 – Present",
-    description:
-      "Built and deployed full-stack web applications using Node.js, Express, and MongoDB. Designed RESTful APIs, implemented JWT authentication, and integrated third-party services.",
-    tech: ["Node.js", "Express.js", "MongoDB", "REST APIs", "JWT"],
+    highlights: [
+      "Shipped REST APIs serving 5+ clients with <200 ms p95 latency",
+      "Built real-time features (live chat, collaborative editing) using Socket.io",
+      "Implemented JWT auth, bcrypt, rate-limiting, and input validation middleware",
+      "Containerised services with Docker; deployed on MongoDB Atlas & Render",
+    ],
+    tech: ["Node.js", "Express", "MongoDB", "Socket.io", "JWT", "Docker"],
   },
   {
-    title: "Full Stack Developer (Learning)",
-    company: "Self-Directed",
+    role: "Full Stack Developer",
+    company: "Self-Directed Learning",
     period: "2022 – 2023",
-    description:
-      "Developed proficiency in React and Next.js while deepening backend expertise. Built multiple projects combining frontend and backend technologies.",
-    tech: ["React", "Next.js", "Tailwind CSS", "PostgreSQL", "Docker"],
+    highlights: [
+      "Shipped 15+ projects — CRUD apps, CLI tools, and a Q&A platform",
+      "Mastered React & Next.js while deepening Node.js and database fundamentals",
+      "Published npm packages and contributed to open-source projects",
+      "Earned MongoDB and Node.js certifications",
+    ],
+    tech: ["React", "Next.js", "PostgreSQL", "Tailwind CSS", "Git"],
   },
 ]
 
 export default function Experience() {
-  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 })
+  const { ref, inView } = useInView({ triggerOnce: true, threshold: 0.08 })
 
   return (
-    <section id="experience" className="section-padding">
-      <div className="container mx-auto px-6">
+    <section id="experience" ref={ref} className="section-gap">
+      <div className="container-main">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="max-w-4xl mx-auto"
+          transition={{ duration: 0.55 }}
         >
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 gradient-text">Experience</h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">My professional journey</p>
-          </div>
+          <span className="section-tag">Experience</span>
 
-          <div className="relative border-l-2 border-blue-500/30 pl-8 space-y-10">
-            {experiences.map((exp, i) => (
+          <div className="mt-4">
+            {EXPERIENCES.map((exp, i) => (
               <motion.div
-                key={exp.title}
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.5, delay: i * 0.15 }}
-                className="relative"
+                key={i}
+                initial={{ opacity: 0 }}
+                animate={inView ? { opacity: 1 } : {}}
+                transition={{ delay: i * 0.1 }}
+                className="border-b border-[#1c1c1c] py-6 first:border-t first:border-[#1c1c1c]"
               >
-                <div className="absolute -left-11 w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
-                  <Briefcase className="h-3 w-3 text-white" />
+                <div className="flex w-full items-start justify-between gap-4">
+                  <div>
+                    <span className="text-[#e8e8e8] font-medium">{exp.role}</span>
+                    <span className="text-[#444] text-sm mono ml-3">{exp.company}</span>
+                  </div>
+                  <span className="text-[#444] text-sm mono shrink-0">{exp.period}</span>
                 </div>
-                <div className="glass rounded-2xl p-6 card-hover">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
-                    <h3 className="text-xl font-bold text-white">{exp.title}</h3>
-                    <span className="text-blue-400 text-sm">{exp.period}</span>
-                  </div>
-                  <p className="text-purple-400 font-medium mb-3">{exp.company}</p>
-                  <p className="text-gray-300 text-sm leading-relaxed mb-4">{exp.description}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.tech.map((t) => (
-                      <span key={t} className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-300 text-xs rounded-full">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
+
+                <ul className="mt-4 space-y-1.5">
+                  {exp.highlights.map((h, j) => (
+                    <li key={j} className="flex items-start gap-2.5 text-sm text-[#666]">
+                      <span className="mt-1.5 w-1 h-1 rounded-full bg-[#333] shrink-0" />
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="flex flex-wrap gap-2 mt-4">
+                  {exp.tech.map((t) => (
+                    <span key={t} className="text-[#444] text-xs mono border border-[#1c1c1c] px-2 py-0.5 rounded-sm">
+                      {t}
+                    </span>
+                  ))}
                 </div>
               </motion.div>
             ))}
+          </div>
+
+          <div className="mt-6">
+            <Link
+              href="https://www.linkedin.com/in/sanchit-jha-844b17255"
+              target="_blank"
+              className="inline-flex items-center gap-1.5 text-sm text-[#444] hover:text-[#888] transition-colors"
+            >
+              Full history on LinkedIn <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </motion.div>
       </div>

@@ -2,153 +2,159 @@
 
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { ArrowUpRight, Calendar, Mail, MapPin } from "lucide-react"
+import { ArrowUpRight, ArrowDown } from "lucide-react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
 
 const AvatarScene = dynamic(() => import("@/components/3d/AvatarScene"), {
   ssr: false,
-  loading: () => (
-    <div className="w-full h-full flex items-center justify-center">
-      <div className="spinner" />
-    </div>
-  ),
+  loading: () => null,
 })
 
 export default function Hero() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [mouse, setMouse] = useState({ x: 0, y: 0 })
+  const [time,  setTime]  = useState("")
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: (e.clientY / window.innerHeight) * 2 - 1,
-      })
-    }
-    window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    const mv = (e) => setMouse({
+      x: (e.clientX / window.innerWidth)  * 2 - 1,
+      y: (e.clientY / window.innerHeight) * 2 - 1,
+    })
+    window.addEventListener("mousemove", mv)
+    return () => window.removeEventListener("mousemove", mv)
   }, [])
 
+  useEffect(() => {
+    const tick = () => setTime(new Date().toLocaleTimeString("en-IN", {
+      hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata",
+    }))
+    tick()
+    const id = setInterval(tick, 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  const fadeUp = (delay = 0) => ({
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.6, delay, ease: "easeOut" },
+  })
+
   return (
-    <section id="home" className="relative min-h-screen flex items-center pt-24 lg:pt-0">
-      {/* Subtle grid backdrop */}
-      <div className="absolute inset-0 bg-grid pointer-events-none" />
+    <section id="home" className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+      <div className="absolute inset-0 bg-grid pointer-events-none" style={{ zIndex: 1 }} />
 
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-12 items-center">
-          {/* LEFT — text */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="lg:col-span-7 order-2 lg:order-1"
-          >
-            {/* Status pill */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 mb-8 text-sm text-tertiary mono"
-            >
-              <span className="dot-pulse" />
-              <span>Available for new opportunities</span>
-            </motion.div>
+      {/* 3D Avatar — subtle background right side */}
+      <div
+        className="absolute right-0 top-0 bottom-0 w-[55%] pointer-events-none"
+        style={{ zIndex: 1, opacity: 0.35 }}
+      >
+        <AvatarScene mousePosition={mouse} />
+      </div>
 
-            {/* Heading */}
-            <h1 className="heading-display text-5xl sm:text-6xl lg:text-7xl mb-6">
-              Hi, I'm <span className="gradient-text">Sanchit</span> —
-              <br />
-              <span className="text-secondary font-medium">a backend &</span>
-              <br />
-              <span className="text-secondary font-medium">full-stack engineer.</span>
-            </h1>
+      {/* Fade avatar into bg on left */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          zIndex: 2,
+          background: "linear-gradient(to right, #0a0a0a 35%, #0a0a0a 50%, transparent 100%)",
+        }}
+      />
 
-            {/* Subtitle */}
-            <p className="text-lg text-secondary max-w-xl mb-10 leading-relaxed">
-              I build scalable backend systems, robust REST APIs, and modern full-stack
-              applications. Currently exploring distributed systems and developer tooling
-              with <span className="text-primary">Node.js</span>,{" "}
-              <span className="text-primary">Next.js</span>, and{" "}
-              <span className="text-primary">MongoDB</span>.
-            </p>
+      <div className="container-main relative" style={{ zIndex: 3 }}>
+        <div className="max-w-3xl">
 
-            {/* CTAs */}
-            <div className="flex flex-wrap gap-3 mb-12">
-              <button
-                onClick={() => document.querySelector("#schedule")?.scrollIntoView({ behavior: "smooth" })}
-                className="btn-base btn-primary"
-              >
-                <Calendar className="w-4 h-4" />
-                Book a meeting
-              </button>
-              <a href="mailto:sanchitjha8888@gmail.com" className="btn-base btn-secondary">
-                <Mail className="w-4 h-4" />
-                sanchitjha8888@gmail.com
-              </a>
-            </div>
-
-            {/* Location row */}
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-tertiary">
-              <span className="flex items-center gap-1.5">
-                <MapPin className="w-3.5 h-3.5" />
-                India · Remote
-              </span>
-              <span className="flex items-center gap-1.5 mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-yellow-500/80" />
-                IST · UTC+5:30
-              </span>
-            </div>
-
-            {/* Quick links */}
-            <div className="flex flex-wrap gap-x-5 gap-y-2 mt-10 text-sm">
-              {[
-                { label: "GitHub", href: "https://github.com/Sanchitjha" },
-                { label: "LinkedIn", href: "https://www.linkedin.com/in/sanchit-jha-844b17255" },
-                { label: "Resume", href: "/sanchit-jha-resume.pdf" },
-              ].map((link) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  className="group inline-flex items-center gap-1 text-secondary hover:text-primary transition-colors"
-                >
-                  {link.label}
-                  <ArrowUpRight className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
-                </Link>
-              ))}
-            </div>
+          {/* Status */}
+          <motion.div {...fadeUp(0.05)} className="flex items-center gap-2.5 mb-10">
+            <span className="dot-pulse" />
+            <span className="text-[#888] text-sm mono">Available for work · India</span>
+            {time && (
+              <span className="text-[#444] text-sm mono ml-2">{time} IST</span>
+            )}
           </motion.div>
 
-          {/* RIGHT — 3D avatar (subtle, smaller) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="lg:col-span-5 order-1 lg:order-2"
-          >
-            <div className="relative w-full aspect-square max-w-[440px] mx-auto">
-              <AvatarScene mousePosition={mousePosition} />
+          {/* Main heading */}
+          <motion.h1 {...fadeUp(0.1)} className="display text-[clamp(3rem,8vw,6.5rem)] mb-6 text-[#e8e8e8]">
+            Hi, I'm
+            <br />
+            <span className="gradient-text">Sanchit Jha.</span>
+          </motion.h1>
 
-              {/* Tiny info chips */}
-              <motion.div
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="hidden md:block absolute top-6 left-0 surface px-3 py-1.5 mono text-xs text-secondary"
+          {/* Role line */}
+          <motion.p {...fadeUp(0.2)} className="text-[clamp(1.1rem,2.5vw,1.5rem)] text-[#888] mb-10 max-w-xl leading-relaxed font-light">
+            Backend & full-stack engineer. I build{" "}
+            <span className="text-[#e8e8e8]">scalable APIs</span>,{" "}
+            <span className="text-[#e8e8e8]">real-time systems</span>, and
+            polished web applications.
+          </motion.p>
+
+          {/* CTAs */}
+          <motion.div {...fadeUp(0.3)} className="flex flex-wrap items-center gap-4 mb-16">
+            <button
+              onClick={() => document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" })}
+              className="btn btn-white"
+            >
+              View my work
+              <ArrowUpRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth" })}
+              className="btn btn-outline"
+            >
+              Get in touch
+            </button>
+            <Link
+              href="/sanchit-jha-resume.pdf"
+              target="_blank"
+              className="btn btn-ghost text-[#888] hover:text-[#e8e8e8]"
+            >
+              Resume ↗
+            </Link>
+          </motion.div>
+
+          {/* Footer row */}
+          <motion.div {...fadeUp(0.4)} className="flex flex-wrap items-center gap-6 text-sm">
+            {[
+              { label: "GitHub",   href: "https://github.com/Sanchitjha" },
+              { label: "LinkedIn", href: "https://www.linkedin.com/in/sanchit-jha-844b17255" },
+              { label: "Email",    href: "mailto:sanchitjha8888@gmail.com" },
+            ].map((l) => (
+              <Link
+                key={l.label}
+                href={l.href}
+                target="_blank"
+                className="group inline-flex items-center gap-1 text-[#888] hover:text-[#e8e8e8] transition-colors"
               >
-                ./sanchit_jha
-              </motion.div>
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="hidden md:flex items-center gap-2 absolute bottom-6 right-0 surface px-3 py-1.5 text-xs"
-              >
-                <span className="dot-pulse" />
-                <span className="text-secondary mono">online</span>
-              </motion.div>
-            </div>
+                {l.label}
+                <ArrowUpRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
+            ))}
+
+            <span className="text-[#333]">·</span>
+
+            {[
+              { v: "15+", l: "projects" },
+              { v: "2+",  l: "years" },
+              { v: "10+", l: "APIs" },
+            ].map((s) => (
+              <span key={s.l} className="text-[#444] text-sm">
+                <span className="text-[#888] font-semibold">{s.v}</span>{" "}
+                <span className="mono">{s.l}</span>
+              </span>
+            ))}
           </motion.div>
         </div>
       </div>
+
+      {/* Scroll hint */}
+      <motion.div
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
+        style={{ zIndex: 3 }}
+      >
+        <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 2, repeat: Infinity }}>
+          <ArrowDown className="w-4 h-4 text-[#444]" />
+        </motion.div>
+      </motion.div>
     </section>
   )
 }

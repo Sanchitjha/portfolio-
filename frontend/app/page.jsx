@@ -17,15 +17,18 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import CommandPalette from "@/components/CommandPalette"
 
+const FloatingParticles = dynamic(() => import("@/components/FloatingParticles"), { ssr: false })
+
 const Fallback = ({ height = "min-h-96" }) => <div className={height} />
 
 export default function HomePage() {
   return (
     <main className="min-h-screen">
+      <FloatingParticles count={110} />
       <Navbar />
       <CommandPalette />
 
-      <div className="relative z-10">
+      <div className="relative" style={{ zIndex: 3 }}>
         <Suspense fallback={<Fallback height="min-h-screen" />}>
           <Hero />
         </Suspense>
