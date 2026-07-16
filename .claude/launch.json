@@ -10,12 +10,12 @@
       "cwd": "frontend"
     },
     {
-      "name": "sleek-portfolio",
+      "name": "portfolio",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3001,
       "autoPort": true,
-      "cwd": "sleek-portfolio"
+      "cwd": "web"
     }
   ]
 }
