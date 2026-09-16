@@ -69,26 +69,16 @@ const authUrl =
 
 function saveToken(refreshToken) {
   const line = `${TOKEN_KEY}="${refreshToken}"`;
-  const text = existsSync(envPath) ? readFileSync(envPath, 'utf8') : '';
-  const lines = text.split('\n');
+  const pattern = new RegExp(`^\\s*${TOKEN_KEY}\\s*=.*$`, 'm');
 
-  // Replace an existing entry in place, otherwise append one.
-  const index = lines.findIndex(
-    (candidate) => candidate.trimStart().split('=')[0].trim() === TOKEN_KEY,
-  );
-
-  if (index === -1) {
-    if (lines.length && lines[lines.length - 1].trim() === '') {
-      lines[lines.length - 1] = line;
-      lines.push('');
-    } else {
-      lines.push(line, '');
-    }
+  let text = existsSync(envPath) ? readFileSync(envPath, 'utf8') : '';
+  if (pattern.test(text)) {
+    text = text.replace(pattern, line);
   } else {
-    lines[index] = line;
+    if (text && !text.endsWith('\n')) text += '\n';
+    text += line + '\n';
   }
-
-  writeFileSync(envPath, lines.join('\n'));
+  writeFileSync(envPath, text);
 }
 
 const server = createServer(async (req, res) => {
