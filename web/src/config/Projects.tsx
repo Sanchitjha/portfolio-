@@ -1,122 +1,79 @@
 import ExpressJs from '@/components/technologies/ExpressJs';
+import JavaScript from '@/components/technologies/JavaScript';
 import MongoDB from '@/components/technologies/MongoDB';
 import NextJs from '@/components/technologies/NextJs';
 import NodeJs from '@/components/technologies/NodeJs';
 import ReactIcon from '@/components/technologies/ReactIcon';
-import SocketIo from '@/components/technologies/SocketIo';
 import TailwindCss from '@/components/technologies/TailwindCss';
-import ThreeJs from '@/components/technologies/ThreeJs';
 import TypeScript from '@/components/technologies/TypeScript';
-import Shadcn from '@/components/technologies/Shadcn';
 import Vercel from '@/components/technologies/Vercel';
-import Motion from '@/components/technologies/Motion';
 import { Project } from '@/types/project';
 
+// Real projects sourced from github.com/Sanchitjha.
+// Tech tags are inferred from each repo's primary languages — refine as needed.
 export const projects: Project[] = [
   {
-    title: 'Developer Portfolio',
+    title: 'Task Manager',
     description:
-      'Minimalist developer portfolio with a 3D avatar, live GitHub repos, scheduling wizard, and editorial typography design.',
+      'A task management web app to create, organize, and track tasks, deployed on Vercel.',
     image: '/assets/placeholder.svg',
-    link: 'https://github.com/Sanchitjha',
+    link: 'https://task-manager-rouge-eta.vercel.app',
     technologies: [
-      { name: 'Next.js',      icon: <NextJs key="nextjs" /> },
-      { name: 'Three.js',     icon: <ThreeJs key="threejs" /> },
-      { name: 'React',        icon: <ReactIcon key="react" /> },
+      { name: 'JavaScript', icon: <JavaScript key="js" /> },
+      { name: 'Node.js', icon: <NodeJs key="node" /> },
+      { name: 'Vercel', icon: <Vercel key="vercel" /> },
+    ],
+    github: 'https://github.com/Sanchitjha/Task-Manager',
+    live: 'https://task-manager-rouge-eta.vercel.app',
+    details: false,
+    isWorking: false,
+  },
+  {
+    title: 'Dev Blog',
+    description:
+      'A developer blog for writing and publishing technical posts, built with Next.js and TypeScript.',
+    image: '/assets/placeholder.svg',
+    link: 'https://dev-blog-neon-eight.vercel.app',
+    technologies: [
+      { name: 'TypeScript', icon: <TypeScript key="ts" /> },
+      { name: 'Next.js', icon: <NextJs key="next" /> },
       { name: 'Tailwind CSS', icon: <TailwindCss key="tw" /> },
-      { name: 'shadcn/ui',    icon: <Shadcn key="shadcn" /> },
-      { name: 'Motion',       icon: <Motion key="motion" /> },
-      { name: 'Vercel',       icon: <Vercel key="vercel" /> },
+      { name: 'Vercel', icon: <Vercel key="vercel" /> },
     ],
-    github: 'https://github.com/Sanchitjha',
-    live:   'https://github.com/Sanchitjha',
+    github: 'https://github.com/Sanchitjha/dev-blog',
+    live: 'https://dev-blog-neon-eight.vercel.app',
     details: false,
-    isWorking: true,
+    isWorking: false,
   },
   {
-    title: 'REST API Backend',
+    title: 'Trip Book',
     description:
-      'Production-grade REST API with Node.js, Express, and MongoDB. JWT auth, bcrypt, rate limiting, input validation, and Docker deployment.',
+      'A trip planning and travel journal web app built with JavaScript.',
     image: '/assets/placeholder.svg',
-    link: 'https://github.com/Sanchitjha',
+    link: 'https://github.com/Sanchitjha/Trip-Book',
     technologies: [
-      { name: 'Node.js',    icon: <NodeJs key="nodejs" /> },
+      { name: 'JavaScript', icon: <JavaScript key="js" /> },
+      { name: 'React', icon: <ReactIcon key="react" /> },
+    ],
+    github: 'https://github.com/Sanchitjha/Trip-Book',
+    live: 'https://github.com/Sanchitjha/Trip-Book',
+    details: false,
+    isWorking: false,
+  },
+  {
+    title: 'CRUD with Express',
+    description:
+      'A REST API demonstrating CRUD operations, built with Node.js and Express.',
+    image: '/assets/placeholder.svg',
+    link: 'https://github.com/Sanchitjha/CRUD-with-express',
+    technologies: [
+      { name: 'Node.js', icon: <NodeJs key="node" /> },
       { name: 'Express.js', icon: <ExpressJs key="express" /> },
-      { name: 'MongoDB',    icon: <MongoDB key="mongodb" /> },
+      { name: 'MongoDB', icon: <MongoDB key="mongodb" /> },
     ],
-    github: 'https://github.com/Sanchitjha',
-    live:   'https://github.com/Sanchitjha',
+    github: 'https://github.com/Sanchitjha/CRUD-with-express',
+    live: 'https://github.com/Sanchitjha/CRUD-with-express',
     details: false,
-    isWorking: true,
-  },
-  {
-    title: 'Dev Q&A Platform',
-    description:
-      'Stack Overflow-inspired Q&A platform with real-time chat via Socket.io, reputation system, voting, and markdown support.',
-    image: '/assets/placeholder.svg',
-    link: 'https://github.com/Sanchitjha',
-    technologies: [
-      { name: 'React',      icon: <ReactIcon key="react" /> },
-      { name: 'Node.js',    icon: <NodeJs key="nodejs" /> },
-      { name: 'MongoDB',    icon: <MongoDB key="mongodb" /> },
-      { name: 'Socket.io',  icon: <SocketIo key="socketio" /> },
-      { name: 'Express.js', icon: <ExpressJs key="express" /> },
-    ],
-    github: 'https://github.com/Sanchitjha',
-    live:   'https://github.com/Sanchitjha',
-    details: false,
-    isWorking: true,
-  },
-  {
-    title: 'Real-time Chat App',
-    description:
-      'Full-stack real-time messaging application with rooms, private DMs, typing indicators, and read receipts built on Socket.io.',
-    image: '/assets/placeholder.svg',
-    link: 'https://github.com/Sanchitjha',
-    technologies: [
-      { name: 'Node.js',    icon: <NodeJs key="nodejs" /> },
-      { name: 'Socket.io',  icon: <SocketIo key="socketio" /> },
-      { name: 'React',      icon: <ReactIcon key="react" /> },
-      { name: 'MongoDB',    icon: <MongoDB key="mongodb" /> },
-      { name: 'Tailwind CSS', icon: <TailwindCss key="tw" /> },
-    ],
-    github: 'https://github.com/Sanchitjha',
-    live:   'https://github.com/Sanchitjha',
-    details: false,
-    isWorking: true,
-  },
-  {
-    title: 'Task Manager API',
-    description:
-      'RESTful task management API with team workspaces, role-based permissions, deadlines, and email notifications via Nodemailer.',
-    image: '/assets/placeholder.svg',
-    link: 'https://github.com/Sanchitjha',
-    technologies: [
-      { name: 'Node.js',    icon: <NodeJs key="nodejs" /> },
-      { name: 'Express.js', icon: <ExpressJs key="express" /> },
-      { name: 'MongoDB',    icon: <MongoDB key="mongodb" /> },
-    ],
-    github: 'https://github.com/Sanchitjha',
-    live:   'https://github.com/Sanchitjha',
-    details: false,
-    isWorking: true,
-  },
-  {
-    title: 'Next.js Dashboard',
-    description:
-      'Full-stack analytics dashboard with server components, Prisma ORM, chart visualizations, and dark/light theme support.',
-    image: '/assets/placeholder.svg',
-    link: 'https://github.com/Sanchitjha',
-    technologies: [
-      { name: 'Next.js',      icon: <NextJs key="nextjs" /> },
-      { name: 'TypeScript',   icon: <TypeScript key="ts" /> },
-      { name: 'Tailwind CSS', icon: <TailwindCss key="tw" /> },
-      { name: 'shadcn/ui',    icon: <Shadcn key="shadcn" /> },
-      { name: 'MongoDB',      icon: <MongoDB key="mongodb" /> },
-    ],
-    github: 'https://github.com/Sanchitjha',
-    live:   'https://github.com/Sanchitjha',
-    details: false,
-    isWorking: true,
+    isWorking: false,
   },
 ];
