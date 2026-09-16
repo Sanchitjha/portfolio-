@@ -165,7 +165,7 @@ export const ThemeToggleButton = ({
       aria-label="Toggle theme"
     >
       <span className="sr-only">Toggle theme</span>
-      {isDark ? <Moon className="size-4" /> : <Sun className="size-4" />}
+      {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}
     </Button>
   );
 };
