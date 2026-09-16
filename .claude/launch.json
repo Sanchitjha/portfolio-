@@ -16,6 +16,12 @@
       "port": 3001,
       "autoPort": true,
       "cwd": "web"
+    },
+    {
+      "name": "fairdeal-demo",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:\\Users\\Sanchit\\OneDrive\\Desktop\\fairdeal-demo\\serve.js"],
+      "port": 5501
     }
   ]
 }
