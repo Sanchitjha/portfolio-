@@ -47,7 +47,23 @@ TELEGRAM_BOT_TOKEN=   # contact form -> your Telegram
 TELEGRAM_CHAT_ID=
 GEMINI_API_KEY=       # AI chat assistant
 NEXT_PUBLIC_URL=      # your production URL, e.g. https://your-domain.com
+
+SPOTIFY_CLIENT_ID=      # "Last played" widget in the hero
+SPOTIFY_CLIENT_SECRET=
+SPOTIFY_REFRESH_TOKEN=
 ```
+
+### Spotify "Last played"
+
+The hero shows the track you're playing now, falling back to the last one you
+played. Without these three variables the widget renders nothing, so the hero
+just closes up — no error, no placeholder.
+
+To get them: create an app at
+[developer.spotify.com/dashboard](https://developer.spotify.com/dashboard), add
+`http://localhost:3001/callback` as a redirect URI, then run the authorization
+code flow once with the `user-read-currently-playing` and
+`user-read-recently-played` scopes to obtain a refresh token.
 
 ## Deploy to Vercel
 
