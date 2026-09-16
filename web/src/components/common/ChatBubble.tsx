@@ -28,15 +28,21 @@ interface Message {
   isStreaming?: boolean;
 }
 
+const formatTime = (date: Date) =>
+  date.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+
+// The timestamp starts empty and is filled in after mount. Computing a clock
+// time here would run on both the server and the client, and the two renders
+// would disagree — which React reports as a hydration mismatch.
 const initialMessages: Message[] = [
   {
     id: 1,
     text: `Hello! I'm ${heroConfig.name}'s Portfolio Assistant. How can I help you?`,
     sender: 'bot',
-    timestamp: new Date().toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit',
-    }),
+    timestamp: '',
   },
 ];
 
@@ -46,6 +52,17 @@ const ChatBubble: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { triggerHaptic, isMobile } = useHapticFeedback();
+
+  // Stamp the greeting once we're on the client, where a clock time is safe.
+  useEffect(() => {
+    setMessages((current) =>
+      current.map((message) =>
+        message.id === 1 && message.timestamp === ''
+          ? { ...message, timestamp: formatTime(new Date()) }
+          : message,
+      ),
+    );
+  }, []);
 
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
@@ -72,10 +89,7 @@ const ChatBubble: React.FC = () => {
       id: Date.now(),
       text: messageText,
       sender: 'user',
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      timestamp: formatTime(new Date()),
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -88,10 +102,7 @@ const ChatBubble: React.FC = () => {
       id: botMessageId,
       text: '',
       sender: 'bot',
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      timestamp: formatTime(new Date()),
       isStreaming: true,
     };
 
@@ -120,10 +131,7 @@ const ChatBubble: React.FC = () => {
       id: Date.now(),
       text: suggestion,
       sender: 'user',
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      timestamp: formatTime(new Date()),
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -135,10 +143,7 @@ const ChatBubble: React.FC = () => {
       id: botMessageId,
       text: '',
       sender: 'bot',
-      timestamp: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      timestamp: formatTime(new Date()),
       isStreaming: true,
     };
 
