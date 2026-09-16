@@ -79,6 +79,27 @@ export const pageMetadata: Record<string, PageMeta> = {
     ogImage: '/assets/logo.png',
     twitterCard: 'summary',
   },
+  '/books': {
+    title: 'Books — Sanchit Jha',
+    description: 'Books that have influenced Sanchit Jha\'s thinking and growth.',
+    keywords: ['books', 'reading', 'reading list', 'recommendations'],
+    ogImage: '/assets/logo.png',
+    twitterCard: 'summary_large_image',
+  },
+  '/movies': {
+    title: 'Movies — Sanchit Jha',
+    description: 'Films and shows that have inspired and entertained Sanchit Jha.',
+    keywords: ['movies', 'films', 'series', 'shows', 'watchlist'],
+    ogImage: '/assets/logo.png',
+    twitterCard: 'summary_large_image',
+  },
+  '/terminal': {
+    title: 'Terminal — Sanchit Jha',
+    description: 'Zsh, Starship, Fastfetch, and shell configuration used by Sanchit Jha.',
+    keywords: ['terminal', 'zsh', 'starship', 'fastfetch', 'shell', 'dotfiles'],
+    ogImage: '/assets/logo.png',
+    twitterCard: 'summary_large_image',
+  },
   '/gears': {
     title: 'Gears — Sanchit Jha',
     description: 'The tools, devices, and software Sanchit Jha uses to build software.',
