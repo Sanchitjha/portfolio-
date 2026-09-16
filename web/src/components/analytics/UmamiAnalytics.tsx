@@ -4,8 +4,9 @@ export default function UmamiAnalytics() {
   const umamiSrc = process.env.NEXT_PUBLIC_UMAMI_SRC;
   const umamiId = process.env.NEXT_PUBLIC_UMAMI_ID;
 
+  // Analytics is optional — without the env vars we simply render no script.
+  // This is an expected state, not an error, so it stays silent.
   if (!umamiSrc || !umamiId) {
-    console.error('Umami Analytics is not configured.');
     return null;
   }
 
