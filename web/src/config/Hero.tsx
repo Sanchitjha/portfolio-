@@ -1,6 +1,11 @@
 import Github from '@/components/svgs/Github';
+import Instagram from '@/components/svgs/Instagram';
 import LinkedIn from '@/components/svgs/LinkedIn';
 import Mail from '@/components/svgs/Mail';
+import Medium from '@/components/svgs/Medium';
+import Pinterest from '@/components/svgs/Pinterest';
+import X from '@/components/svgs/X';
+import YouTube from '@/components/svgs/YouTube';
 import ExpressJs from '@/components/technologies/ExpressJs';
 import MongoDB from '@/components/technologies/MongoDB';
 import NextJs from '@/components/technologies/NextJs';
@@ -79,7 +84,16 @@ export const heroConfig = {
   ],
 };
 
+/**
+ * Social links shown in the hero and the footer's CONNECT column.
+ * Leave an href as an empty string to hide that icon entirely.
+ */
 export const socialLinks = [
+  {
+    name: 'X',
+    href: '',
+    icon: <X />,
+  },
   {
     name: 'LinkedIn',
     href: 'https://www.linkedin.com/in/sanchit-jha-844b17255',
@@ -91,8 +105,28 @@ export const socialLinks = [
     icon: <Github />,
   },
   {
+    name: 'YouTube',
+    href: '',
+    icon: <YouTube />,
+  },
+  {
+    name: 'Instagram',
+    href: '',
+    icon: <Instagram />,
+  },
+  {
+    name: 'Pinterest',
+    href: '',
+    icon: <Pinterest />,
+  },
+  {
+    name: 'Medium',
+    href: '',
+    icon: <Medium />,
+  },
+  {
     name: 'Email',
     href: 'mailto:sanchitjha8888@gmail.com',
     icon: <Mail />,
   },
-];
+].filter((link) => link.href !== '');
