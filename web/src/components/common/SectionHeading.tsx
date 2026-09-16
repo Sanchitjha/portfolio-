@@ -1,7 +1,8 @@
 import React from 'react';
 
 interface SectionHeadingProps {
-  subHeading: string;
+  /** Small eyebrow above the heading. Omit for a bare heading. */
+  subHeading?: string;
   heading: string;
 }
 
@@ -11,7 +12,7 @@ export default function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <div>
-      <p className="text-secondary text-sm">{subHeading}</p>
+      {subHeading && <p className="text-secondary text-sm">{subHeading}</p>}
       <h2 className="text-2xl font-bold">{heading}</h2>
     </div>
   );
