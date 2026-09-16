@@ -3,6 +3,11 @@ import { createParser } from 'eventsource-parser';
 import { NextRequest, NextResponse } from 'next/server';
 import * as z from 'zod';
 
+// Gemini retires model aliases periodically — a stale name fails with a 404.
+// List what the key can reach with:
+//   GET https://generativelanguage.googleapis.com/v1beta/models?key=...
+const GEMINI_MODEL = 'gemini-3.5-flash';
+
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
 
 const RATE_LIMIT_WINDOW = 60 * 1000;
@@ -175,7 +180,7 @@ export async function POST(request: NextRequest) {
       },
     };
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse&key=${apiKey}`;
+    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:streamGenerateContent?alt=sse&key=${apiKey}`;
 
     const response = await fetch(geminiUrl, {
       method: 'POST',
