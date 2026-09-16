@@ -20,6 +20,16 @@ export const heroConfig = {
   title: 'A Backend & Full Stack Developer.',
   avatar: '/assets/logo.png',
 
+  /** Full name shown as the heading in the compact hero. */
+  fullName: 'Sanchit Jha',
+
+  /** Rendered as "Role · Role · email" under the name. */
+  roles: ['Engineer', 'Backend Developer'],
+  email: 'sanchitjha8888@gmail.com',
+
+  /** One-line intro under the roles. */
+  tagline: 'Love to build scalable APIs, real-time systems & developer tooling.',
+
   skills: [
     {
       name: 'Node.js',
