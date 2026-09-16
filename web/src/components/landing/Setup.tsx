@@ -10,14 +10,14 @@ import { Card } from '../ui/card';
 
 const setup = [
   {
-    name: 'Gears Used',
-    description: 'Productivity Tools, Gears i use to get my work done.',
+    name: 'Gears',
+    description: 'Tools, devices, and software I use to get work done.',
     icon: <Gear className="size-4" />,
     href: '/gears',
   },
   {
-    name: 'VS Code / Cursor Setup',
-    description: 'VS Code / Cursor Setup i use daily.',
+    name: 'Setup',
+    description: 'VSCode / Cursor configuration and extensions guide.',
     icon: <Code className="size-4" />,
     href: '/setup',
   },
@@ -32,7 +32,7 @@ const setup = [
 export default function Setup() {
   return (
     <Container className="mt-10">
-      <SectionHeading subHeading="Development" heading="Setup" />
+      <SectionHeading heading="Development" />
       <div className="mt-8 flex flex-col gap-4">
         {setup.map((item) => (
           <Link className="group" href={item.href} key={item.name}>
