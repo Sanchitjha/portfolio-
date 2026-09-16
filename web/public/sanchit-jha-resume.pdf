@@ -1,0 +1,65 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 2088 >>
+stream
+BT /F2 22 Tf 56 806 Td (Sanchit Jha) Tj ET
+BT /F1 12 Tf 56 782 Td (Backend & Full-Stack Developer) Tj ET
+BT /F1 9 Tf 56 767 Td (sanchitjha8888@gmail.com  |  github.com/Sanchitjha  |  linkedin.com/in/sanchit-jha-844b17255  |  India) Tj ET
+BT /F2 11 Tf 56 746 Td (SUMMARY) Tj ET
+56 731 m 539 731 l 0.6 w 0.7 G S 0 G
+BT /F1 10 Tf 56 725 Td (Backend-first developer based in India. I build scalable REST APIs, real-time applications,) Tj ET
+BT /F1 10 Tf 56 713 Td (and full-stack products with Node.js, databases, and modern web technologies.) Tj ET
+BT /F2 11 Tf 56 691 Td (SKILLS) Tj ET
+56 676 m 539 676 l 0.6 w 0.7 G S 0 G
+BT /F1 10 Tf 56 670 Td (Languages:  JavaScript, TypeScript, HTML, CSS) Tj ET
+BT /F1 10 Tf 56 658 Td (Backend:    Node.js, Express.js, REST APIs, JWT / Auth) Tj ET
+BT /F1 10 Tf 56 646 Td (Databases:  MongoDB, Mongoose) Tj ET
+BT /F1 10 Tf 56 634 Td (Frontend:   React, Next.js, Tailwind CSS) Tj ET
+BT /F1 10 Tf 56 622 Td (Tools:      Git, GitHub, Vercel, Postman) Tj ET
+BT /F2 11 Tf 56 600 Td (PROJECTS) Tj ET
+56 585 m 539 585 l 0.6 w 0.7 G S 0 G
+BT /F2 10 Tf 56 579 Td (Task Manager) Tj ET
+BT /F1 9 Tf 56 568 Td (Task management web app to create, organize, and track tasks.  task-manager-rouge-eta.vercel.app) Tj ET
+BT /F2 10 Tf 56 555 Td (Dev Blog) Tj ET
+BT /F1 9 Tf 56 544 Td (Developer blog built with Next.js and TypeScript.  dev-blog-neon-eight.vercel.app) Tj ET
+BT /F2 10 Tf 56 531 Td (Trip Book) Tj ET
+BT /F1 9 Tf 56 520 Td (Trip planning and travel journal web app.  github.com/Sanchitjha/Trip-Book) Tj ET
+BT /F2 10 Tf 56 507 Td (CRUD with Express) Tj ET
+BT /F1 9 Tf 56 496 Td (REST API demonstrating CRUD operations with Node.js and Express.  github.com/Sanchitjha/CRUD-with-express) Tj ET
+BT /F2 11 Tf 56 475 Td (EXPERIENCE) Tj ET
+56 460 m 539 460 l 0.6 w 0.7 G S 0 G
+BT /F1 10 Tf 56 454 Td ([ Add your work experience here: role, company, dates, and 2-3 highlight bullet points. ]) Tj ET
+BT /F2 11 Tf 56 432 Td (EDUCATION) Tj ET
+56 417 m 539 417 l 0.6 w 0.7 G S 0 G
+BT /F1 10 Tf 56 411 Td ([ Add your education here: degree, institution, and year. ]) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002391 00000 n 
+0000002461 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2536
+%%EOF
