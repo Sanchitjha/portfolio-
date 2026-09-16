@@ -16,7 +16,8 @@ import { fileURLToPath } from 'node:url';
 
 const PORT = 8888;
 const REDIRECT_URI = `http://127.0.0.1:${PORT}/callback`;
-const SCOPES = 'user-read-currently-playing user-read-recently-played';
+const SCOPES =
+  'user-read-currently-playing user-top-read';
 const TOKEN_KEY = 'SPOTIFY_REFRESH_TOKEN';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
