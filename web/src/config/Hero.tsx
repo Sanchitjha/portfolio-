@@ -29,7 +29,7 @@ export const heroConfig = {
   fullName: 'Sanchit Jha',
 
   /** Rendered as "Role · Role · email" under the name. */
-  roles: ['Engineer', 'Backend Developer'],
+  roles: ['Engineer', 'Full Stack Developer'],
   email: 'sanchitjha8888@gmail.com',
 
   /** One-line intro under the roles. */
@@ -91,7 +91,7 @@ export const heroConfig = {
 export const socialLinks = [
   {
     name: 'X',
-    href: '',
+    href: 'https://x.com/sanchit_jha05',
     icon: <X />,
   },
   {
@@ -111,7 +111,7 @@ export const socialLinks = [
   },
   {
     name: 'Instagram',
-    href: '',
+    href: 'https://www.instagram.com/sanchit.pxr',
     icon: <Instagram />,
   },
   {
