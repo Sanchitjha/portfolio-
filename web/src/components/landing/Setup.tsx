@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, SquareTerminal } from 'lucide-react';
 import { Link } from 'next-view-transitions';
 import React from 'react';
 
@@ -20,6 +20,12 @@ const setup = [
     description: 'VS Code / Cursor Setup i use daily.',
     icon: <Code className="size-4" />,
     href: '/setup',
+  },
+  {
+    name: 'Terminal',
+    description: 'Zsh, Starship, Fastfetch, and shell configuration.',
+    icon: <SquareTerminal className="size-4" />,
+    href: '/terminal',
   },
 ];
 
