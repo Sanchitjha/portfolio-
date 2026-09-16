@@ -1,28 +1,29 @@
 'use client';
 
-import type { LastPlayedTrack } from '@/app/api/spotify/last-played/route';
+import type { SpotifyTrackInfo } from '@/app/api/spotify/track/route';
 import Spotify from '@/components/svgs/Spotify';
+import { spotifyConfig } from '@/config/Spotify';
 import React from 'react';
 
 /**
- * Shows the track currently playing, falling back to the most recent one.
- * Renders nothing until a track is available, so the hero stays clean when
- * the Spotify env vars are absent.
+ * Shows what's playing now, else the top track of the last few weeks. When the
+ * API returns nothing — which is always the case without Spotify Premium — it
+ * falls back to the track pinned in the config.
  */
 export default function SpotifyNowPlaying() {
-  const [track, setTrack] = React.useState<LastPlayedTrack | null>(null);
+  const [live, setLive] = React.useState<SpotifyTrackInfo | null>(null);
 
   React.useEffect(() => {
     let cancelled = false;
 
     const load = async () => {
       try {
-        const response = await fetch('/api/spotify/last-played');
+        const response = await fetch('/api/spotify/track');
         if (!response.ok) return;
         const data = await response.json();
-        if (!cancelled) setTrack(data.track ?? null);
+        if (!cancelled) setLive(data.track ?? null);
       } catch {
-        // Offline or route unavailable — leave the widget hidden.
+        // Offline or route unavailable — the pinned track still shows.
       }
     };
 
@@ -35,14 +36,21 @@ export default function SpotifyNowPlaying() {
     };
   }, []);
 
+  const pinned = spotifyConfig.track;
+  const track = live ?? pinned;
+
   if (!track) return null;
+
+  const label = live
+    ? live.isPlaying
+      ? 'Now playing'
+      : 'On repeat'
+    : spotifyConfig.label;
 
   return (
     <div className="text-secondary flex flex-wrap items-center gap-2 text-sm">
       <Spotify className="size-4 shrink-0 text-[#1DB954]" />
-      <span className="text-muted-foreground">
-        {track.isPlaying ? 'Now playing' : 'Last played'}
-      </span>
+      <span className="text-muted-foreground">{label}</span>
       <span className="text-muted-foreground">—</span>
       <a
         href={track.url}
